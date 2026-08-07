@@ -594,6 +594,8 @@
         requestAnimationFrame(frame);
     }
 
-    var moreBtn = document.querySelector(".more-btn");
-    if (moreBtn) setup(moreBtn);
+    var moreBtns = document.querySelectorAll(".more-btn");
+    for (var i = 0; i < moreBtns.length; i++) {
+        setup(moreBtns[i]);
+    }
 })();
