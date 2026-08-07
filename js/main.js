@@ -209,7 +209,7 @@
     }
 
     document
-        .querySelectorAll(".gallery-item img, .work-card .work-media img")
+        .querySelectorAll(".gallery-item img, .work-card .work-media img, .detail-card img")
         .forEach(function (img) {
             img.addEventListener("click", function () {
                 openImage(img.src);
