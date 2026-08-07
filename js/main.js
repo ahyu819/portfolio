@@ -547,7 +547,7 @@
         gl.uniform3f(uBaseColor, 0.32, 0.32, 0.32);
         gl.uniform1f(uShineSize, (10 * Math.PI) / 180);
         gl.uniform1f(uShineFade, (40 * Math.PI) / 180);
-        gl.uniform1f(uThickness, dpr);
+        gl.uniform1f(uThickness, 1.7 * dpr);
         gl.uniform1f(uBaseWidth, dpr);
 
         var pointerAngle = null;
@@ -587,7 +587,7 @@
             brightness += (proximityT - brightness) * (1 - Math.exp(-dt * 8));
             gl.uniform1f(uAngle, angle);
             gl.uniform1f(uIntensity, brightness);
-            gl.uniform1f(uRadius, Math.min(999, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr);
+            gl.uniform1f(uRadius, Math.min(18, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr);
             gl.clear(gl.COLOR_BUFFER_BIT);
             gl.drawArrays(gl.TRIANGLES, 0, 3);
         }
