@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <title>张三的作品集</title>
+</head>
+<body>
+    <header>
+        <div class="nav-pill">
+            <div class="nav-logo">
+                <div class="nav-logo-ring">
+                    <div class="nav-logo-inner">A</div>
+                </div>
+            </div>
+            <span class="nav-divider"></span>
+            <a class="nav-link" href="#hero">首页</a>
+            <a class="nav-link" href="#works">作品</a>
+            <a class="nav-link" href="#gallery">图集</a>
+            <a class="nav-link" href="#contact">联系</a>
+            <span class="nav-divider"></span>
+            <a class="nav-sayhi" href="about.html">
+                <span class="nav-sayhi-bg"></span>
+                <span class="nav-sayhi-inner">关于我</span>
+            </a>
+        </div>
+    </header>
+
+    <section id="hero">
+        <video class="hero-bg" autoplay muted loop playsinline src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="hero-inner">
+            <h1>你好，我是张三</h1>
+            <p class="hero-role">视觉创作者 · 作品记录站</p>
+            <p class="hero-desc">这里是我的作品集，用图片和视频记录我做过的每一件事。</p>
+        </div>
+    </section>
+
+    <section id="works">
+        <div class="section-header">
+            <div class="section-eyebrow">Featured Works</div>
+            <h2>精选作品</h2>
+            <p class="section-sub">挑几件最满意的作品放在最前面</p>
+        </div>
+        <div class="works-grid">
+            <div class="work-card reveal">
+                <div class="work-media" data-video>
+                    <video class="work-video" preload="metadata" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+                    <div class="vp-controls">
+                        <button class="vp-center-btn" type="button" aria-label="播放或暂停"></button>
+                        <div class="vp-bottom">
+                            <button class="vp-play-toggle" type="button" aria-label="播放或暂停"></button>
+                            <div class="vp-progress">
+                                <div class="vp-progress-fill"></div>
+                            </div>
+                            <span class="vp-time">0:00 / 0:00</span>
+                            <div class="vp-volume">
+                                <button class="vp-volume-btn" type="button" aria-label="音量"></button>
+                                <div class="vp-volume-panel">
+                                    <div class="vp-vol-slider">
+                                        <div class="vp-vol-fill"></div>
+                                        <div class="vp-vol-handle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="vp-fullscreen" type="button" aria-label="全屏"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-info">
+                    <h3>视频作品 · 占位标题</h3>
+                    <p>点击视频唤出控制条，用中间按钮播放/暂停，右下角可放大。</p>
+                </div>
+            </div>
+            <div class="work-card reveal">
+                <div class="work-media">
+                    <img src="https://picsum.photos/seed/work1/800/500" alt="作品 1 占位图">
+                </div>
+                <div class="work-info">
+                    <h3>图片作品 · 占位标题 1</h3>
+                    <p>作品简介写在这里，一句话说清楚这件作品是什么。</p>
+                </div>
+            </div>
+            <div class="work-card reveal">
+                <div class="work-media">
+                    <img src="https://picsum.photos/seed/work2/800/500" alt="作品 2 占位图">
+                </div>
+                <div class="work-info">
+                    <h3>图片作品 · 占位标题 2</h3>
+                    <p>作品简介写在这里，一句话说清楚这件作品是什么。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery">
+        <div class="section-header">
+            <div class="section-eyebrow">Gallery</div>
+            <h2>作品图集</h2>
+            <p class="section-sub">瀑布流展示，点击任意图片可以放大查看</p>
+        </div>
+        <div class="gallery-cols">
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g1/600/800" alt="图集 1"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g2/600/450" alt="图集 2"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g3/600/900" alt="图集 3"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g4/600/500" alt="图集 4"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g5/600/750" alt="图集 5"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g6/600/420" alt="图集 6"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g7/600/850" alt="图集 7"></div>
+            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g8/600/480" alt="图集 8"></div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-header">
+            <div class="section-eyebrow">Contact</div>
+            <h2>联系我</h2>
+            <p class="section-sub">合作、交流、招聘，都可以随时找我</p>
+        </div>
+        <div class="contact-card reveal">
+            <a class="contact-item" href="mailto:your@email.com">邮箱：your@email.com</a>
+            <div class="contact-item">微信：请填写你的微信号</div>
+            <div class="contact-item">更多社交链接将在里程碑 5 补充</div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 张三 · 用爱搭建</p>
+    </footer>
+
+    <div id="lightbox">
+        <div class="lightbox-ring">
+            <div class="lightbox-inner" id="lightbox-media"></div>
+        </div>
+        <div class="lightbox-hint">滚轮 / 双指缩放 · 点击空白关闭</div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
