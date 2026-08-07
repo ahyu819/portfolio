@@ -553,10 +553,6 @@ footer {
     transform: translateY(0);
 }
 
-.reveal + .reveal {
-    margin-top: 64px;
-}
-
 #lightbox {
     position: fixed;
     inset: 0;
@@ -797,16 +793,20 @@ footer {
 .more-btn-inner {
     position: relative;
     display: block;
-    padding: 11px 30px;
+    padding: 15px 42px;
     background: rgba(22, 25, 31, 0.9);
     border-radius: 9999px;
     color: var(--text);
-    font-size: 15px;
+    font-size: 17px;
     transition: color 0.2s;
 }
 
 .more-btn:hover .more-btn-inner {
     color: #fff;
+}
+
+.detail-section {
+    margin-top: 72px;
 }
 
 .detail-card {
