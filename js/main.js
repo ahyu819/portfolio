@@ -144,16 +144,17 @@
         lightboxRing.classList.remove("dragging");
     });
 
-    lightbox.addEventListener("mousedown", function (e) {
-        if (e.button !== 0) return;
+    lightbox.addEventListener("pointerdown", function (e) {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
         if (!lightboxRing.contains(e.target)) return;
         dragStartX = e.clientX;
         dragStartY = e.clientY;
         didDrag = false;
+        lightboxRing.setPointerCapture(e.pointerId);
         lightboxRing.classList.add("dragging");
     });
 
-    window.addEventListener("mousemove", function (e) {
+    lightbox.addEventListener("pointermove", function (e) {
         if (!lightboxRing.classList.contains("dragging")) return;
         var dx = e.clientX - dragStartX;
         var dy = e.clientY - dragStartY;
@@ -165,7 +166,11 @@
         applyView();
     });
 
-    window.addEventListener("mouseup", function () {
+    lightbox.addEventListener("pointerup", function () {
+        lightboxRing.classList.remove("dragging");
+    });
+
+    lightbox.addEventListener("pointercancel", function () {
         lightboxRing.classList.remove("dragging");
     });
 
@@ -191,6 +196,7 @@
         var img = document.createElement("img");
         img.src = src;
         img.alt = "放大查看";
+        img.draggable = false;
         lightboxMedia.appendChild(img);
         lightbox.classList.add("open");
         resetView();
