@@ -413,3 +413,187 @@
     window.addEventListener("scroll", highlightNav);
     highlightNav();
 })();
+
+(function () {
+    var PAD = 20;
+
+    var VERT = "#version 300 es\nin vec2 position;\nvoid main() {\n  gl_Position = vec4(position, 0.0, 1.0);\n}\n";
+
+    var FRAG = "#version 300 es\n" +
+        "precision highp float;\n" +
+        "uniform vec2 uCenter;\n" +
+        "uniform vec2 uHalfSize;\n" +
+        "uniform float uRadius;\n" +
+        "uniform float uAngle;\n" +
+        "uniform float uPx;\n" +
+        "uniform vec3 uLineColor;\n" +
+        "uniform vec3 uBaseColor;\n" +
+        "uniform float uIntensity;\n" +
+        "uniform float uShineSize;\n" +
+        "uniform float uShineFade;\n" +
+        "uniform float uThickness;\n" +
+        "uniform float uBaseWidth;\n" +
+        "out vec4 fragColor;\n" +
+        "float sdRoundedRect(vec2 p, vec2 b, float r) {\n" +
+        "  vec2 q = abs(p) - b + r;\n" +
+        "  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;\n" +
+        "}\n" +
+        "float shapeSDF(vec2 p) { return sdRoundedRect(p, uHalfSize, uRadius); }\n" +
+        "float gaussianLine(float d, float sigma) {\n" +
+        "  float x = d / (sigma + 1e-6);\n" +
+        "  float k = mix(1.0, 1.6, smoothstep(0.0, 1.5, x));\n" +
+        "  return exp(-k * x * x);\n" +
+        "}\n" +
+        "void main() {\n" +
+        "  vec2 p = gl_FragCoord.xy - uCenter;\n" +
+        "  float d = shapeSDF(p);\n" +
+        "  vec2 L = vec2(cos(uAngle), sin(uAngle));\n" +
+        "  float base = (1.0 - smoothstep(0.0, uBaseWidth, abs(d))) * 0.45;\n" +
+        "  vec2 nEll = normalize(p / (uHalfSize * uHalfSize) + 1e-6);\n" +
+        "  float phi = acos(clamp(abs(dot(nEll, L)), 0.0, 1.0));\n" +
+        "  float rim = 1.0 - smoothstep(uShineSize - uShineFade, uShineSize + uShineFade + 1e-4, phi);\n" +
+        "  float line = gaussianLine(d, uThickness);\n" +
+        "  float edgeClamp = 1.0 - smoothstep(0.5 * uPx, 3.0 * uPx, abs(d));\n" +
+        "  float hi = line * rim * edgeClamp * uIntensity;\n" +
+        "  vec3 col = uBaseColor * base + uLineColor * hi;\n" +
+        "  float a = clamp(base + hi, 0.0, 1.0);\n" +
+        "  fragColor = vec4(col, a);\n" +
+        "}\n";
+
+    function setup(btn) {
+        var fx = btn.querySelector(".more-btn-fx");
+        if (!fx) return;
+        var canvas = document.createElement("canvas");
+        fx.appendChild(canvas);
+        var gl = canvas.getContext("webgl2", { alpha: true });
+        if (!gl) return;
+
+        function compileShader(type, src) {
+            var s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+            if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                canvas.remove();
+                return null;
+            }
+            return s;
+        }
+
+        var vs = compileShader(gl.VERTEX_SHADER, VERT);
+        if (!vs) return;
+        var fs = compileShader(gl.FRAGMENT_SHADER, FRAG);
+        if (!fs) return;
+
+        var prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.bindAttribLocation(prog, 0, "position");
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+            canvas.remove();
+            return;
+        }
+        gl.useProgram(prog);
+
+        function uni(name) {
+            return gl.getUniformLocation(prog, name);
+        }
+        var uCenter = uni("uCenter");
+        var uHalfSize = uni("uHalfSize");
+        var uRadius = uni("uRadius");
+        var uAngle = uni("uAngle");
+        var uPx = uni("uPx");
+        var uLineColor = uni("uLineColor");
+        var uBaseColor = uni("uBaseColor");
+        var uIntensity = uni("uIntensity");
+        var uShineSize = uni("uShineSize");
+        var uShineFade = uni("uShineFade");
+        var uThickness = uni("uThickness");
+        var uBaseWidth = uni("uBaseWidth");
+
+        var tri = new Float32Array([-1, -1, 3, -1, -1, 3]);
+        var buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, tri, gl.STATIC_DRAW);
+        gl.enableVertexAttribArray(0);
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+        gl.clearColor(0, 0, 0, 0);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+        var dpr = window.devicePixelRatio || 1;
+        var sizeRef = { w: 1, h: 1 };
+
+        function resize() {
+            var rect = btn.getBoundingClientRect();
+            var w = rect.width;
+            var h = rect.height;
+            sizeRef.w = w;
+            sizeRef.h = h;
+            canvas.width = Math.round((w + PAD * 2) * dpr);
+            canvas.height = Math.round((h + PAD * 2) * dpr);
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.uniform2fv(uCenter, [(PAD + w / 2) * dpr, (PAD + h / 2) * dpr]);
+            gl.uniform2fv(uHalfSize, [(w / 2) * dpr, (h / 2) * dpr]);
+        }
+
+        var ro = new ResizeObserver(function () { resize(); });
+        ro.observe(btn);
+        resize();
+
+        gl.uniform1f(uPx, dpr);
+        gl.uniform3f(uLineColor, 1, 1, 1);
+        gl.uniform3f(uBaseColor, 0.32, 0.32, 0.32);
+        gl.uniform1f(uShineSize, (10 * Math.PI) / 180);
+        gl.uniform1f(uShineFade, (40 * Math.PI) / 180);
+        gl.uniform1f(uThickness, dpr);
+        gl.uniform1f(uBaseWidth, dpr);
+
+        var pointerAngle = null;
+        var proximityT = 0;
+
+        window.addEventListener("pointermove", function (e) {
+            var rect = btn.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top + rect.height / 2;
+            var dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+            var dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+            var dist = Math.hypot(dx, dy);
+            if (dist === 0) {
+                var nx = (e.clientX - cx) / (rect.width / 2);
+                var ny = (cy - e.clientY) / (rect.height / 2);
+                pointerAngle = Math.atan2(2 / rect.height, -2 / rect.width) + nx * 0.3 + ny * 0.15;
+            } else {
+                pointerAngle = Math.atan2(cy - e.clientY, e.clientX - cx);
+            }
+            var t = Math.max(0, 1 - dist / 250);
+            proximityT = t * t * (3 - 2 * t);
+        });
+
+        var angle = 2.4;
+        var idleAngle = 2.4;
+        var brightness = 0;
+        var last = performance.now();
+
+        function frame(now) {
+            requestAnimationFrame(frame);
+            var dt = Math.min((now - last) / 1000, 0.05);
+            last = now;
+            idleAngle += 0.35 * dt;
+            var target = pointerAngle != null ? pointerAngle : idleAngle;
+            var diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+            angle += diff * (1 - Math.exp(-dt * 7));
+            brightness += (proximityT - brightness) * (1 - Math.exp(-dt * 8));
+            gl.uniform1f(uAngle, angle);
+            gl.uniform1f(uIntensity, brightness);
+            gl.uniform1f(uRadius, Math.min(999, Math.min(sizeRef.w, sizeRef.h) / 2) * dpr);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    var moreBtn = document.querySelector(".more-btn");
+    if (moreBtn) setup(moreBtn);
+})();
