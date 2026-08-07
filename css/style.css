@@ -793,16 +793,18 @@ footer {
 .more-btn-inner {
     position: relative;
     display: block;
-    padding: 15px 42px;
+    padding: 18px 54px;
     background: rgba(22, 25, 31, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 9999px;
     color: var(--text);
-    font-size: 17px;
-    transition: color 0.2s;
+    font-size: 18px;
+    transition: color 0.2s, border-color 0.2s;
 }
 
 .more-btn:hover .more-btn-inner {
     color: #fff;
+    border-color: transparent;
 }
 
 .detail-section {
