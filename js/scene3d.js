@@ -56,53 +56,15 @@ import * as THREE from "three";
     rimLight.position.set(-4, 2.5, -3);
     scene.add(rimLight);
 
-    function makeFieldLayer(count, color, size, opacity, speed) {
-        var positions = new Float32Array(count * 3);
-        for (var i = 0; i < count; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 22;
-            positions[i * 3 + 1] = Math.random() * 6.5 - 1.2;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
-        }
-        var geo = new THREE.BufferGeometry();
-        geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-        var mat = new THREE.PointsMaterial({
-            color: color,
-            size: size,
-            transparent: true,
-            opacity: opacity,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending
-        });
-        var points = new THREE.Points(geo, mat);
-        var base = new Float32Array(count);
-        for (var j = 0; j < count; j++) {
-            base[j] = positions[j * 3 + 1];
-        }
-        scene.add(points);
-        return {
-            update: function (t) {
-                var attr = geo.attributes.position;
-                for (var i = 0; i < count; i++) {
-                    var y = base[i] - ((t * speed + i * 0.37) % 5.6);
-                    attr.array[i * 3 + 1] = y;
-                }
-                attr.needsUpdate = true;
-            }
-        };
-    }
-
-    var dust = makeFieldLayer(420, 0xffffff, 0.05, 0.55, 0.06);
-    var stars = makeFieldLayer(120, 0xffffff, 0.08, 0.95, 0.16);
-
-    function makeMountain(z, color, height) {
+    function makeMountain(z, color, height, width) {
         var shape = new THREE.Shape();
-        shape.moveTo(-26, 0);
+        shape.moveTo(-width, 0);
         var xs = [-20, -15, -10, -5, 0, 5, 10, 15, 20, 26];
         var peaks = [0.45, 1.0, 0.3, 1.2, 0.5, 1.0, 0.25, 0.9, 0.4, 0];
         for (var i = 0; i < xs.length; i++) {
-            shape.lineTo(xs[i], peaks[i] * height);
+            shape.lineTo(xs[i] * width / 26, peaks[i] * height);
         }
-        shape.lineTo(26, 0);
+        shape.lineTo(width, 0);
         shape.closePath();
 
         var geo = new THREE.ShapeGeometry(shape);
@@ -112,12 +74,13 @@ import * as THREE from "three";
             new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0, depthWrite: false })
         );
         mesh.position.set(0, 0, -z);
+        mesh.renderOrder = 1;
         scene.add(mesh);
         return mesh;
     }
 
-    var mountainsFar = makeMountain(3.2, 0x0d1015, 2.6);
-    var mountainsNear = makeMountain(2.4, 0x08090c, 1.9);
+    var mountainsFar = makeMountain(3.4, 0x79828f, 3.6, 34);
+    var mountainsNear = makeMountain(2.5, 0x313a46, 2.9, 30);
 
     var progress = 0;
 
@@ -146,10 +109,7 @@ import * as THREE from "three";
         camera.position.x = Math.sin(t * 0.2) * 0.15;
         camera.lookAt(0, 0.15 - progress * 0.85, 0);
 
-        dust.update(t);
-        stars.update(t);
-
-        var mountainIn = Math.min(1, Math.max(0, (progress - 0.78) / 0.22));
+        var mountainIn = Math.min(1, Math.max(0, (progress - 0.55) / 0.35));
         mountainsFar.material.opacity = mountainIn * 0.9;
         mountainsFar.position.y = (mountainIn - 1) * 1.6;
         mountainsNear.material.opacity = mountainIn;
