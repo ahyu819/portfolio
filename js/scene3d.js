@@ -18,35 +18,7 @@ import * as THREE from "three";
     camera.position.set(0, 0.6, 9);
     camera.lookAt(0, 0, 0);
 
-    var stageY = -1.2;
-
-    var disc = new THREE.Mesh(
-        new THREE.CylinderGeometry(3.4, 3.4, 0.18, 64),
-        new THREE.MeshStandardMaterial({ color: 0x15181e, metalness: 0.55, roughness: 0.35 })
-    );
-    disc.position.y = stageY;
-    disc.receiveShadow = true;
-    scene.add(disc);
-
-    var discTop = new THREE.Mesh(
-        new THREE.CircleGeometry(3.38, 64),
-        new THREE.MeshStandardMaterial({ color: 0x1a1d24, metalness: 0.7, roughness: 0.3 })
-    );
-    discTop.rotation.x = -Math.PI / 2;
-    discTop.position.y = stageY + 0.09;
-    discTop.receiveShadow = true;
-    scene.add(discTop);
-
-    var deck = new THREE.Mesh(
-        new THREE.TorusGeometry(3.4, 0.02, 12, 96),
-        new THREE.MeshStandardMaterial({ color: 0x9aa3b2, metalness: 0.9, roughness: 0.25 })
-    );
-    deck.rotation.x = Math.PI / 2;
-    deck.position.y = stageY + 0.1;
-    scene.add(deck);
-
     var group = new THREE.Group();
-    group.position.y = 0.15;
 
     function solid(geo, color, metal, rough, y) {
         var m = new THREE.Mesh(
@@ -59,16 +31,13 @@ import * as THREE from "three";
         return m;
     }
 
-    var ball = solid(new THREE.SphereGeometry(0.75, 64, 64), 0xeef1f6, 0.85, 0.2, 0);
+    solid(new THREE.SphereGeometry(0.75, 64, 64), 0xeef1f6, 0.85, 0.2, 0);
     var torus = solid(new THREE.TorusGeometry(1.15, 0.09, 24, 96), 0x9aa3b2, 0.9, 0.25, 0);
     torus.rotation.x = Math.PI / 2.6;
 
     var torus2 = solid(new THREE.TorusGeometry(1.55, 0.05, 24, 96), 0x6b7280, 0.85, 0.3, 0);
     torus2.rotation.x = Math.PI / 1.8;
     torus2.rotation.y = 0.5;
-
-    var baseRing = solid(new THREE.TorusGeometry(1.7, 0.045, 20, 96), 0x7d8794, 0.85, 0.32, -1.05);
-    baseRing.rotation.x = Math.PI / 2;
 
     scene.add(group);
 
@@ -87,34 +56,68 @@ import * as THREE from "three";
     rimLight.position.set(-4, 2.5, -3);
     scene.add(rimLight);
 
-    var beams = [];
+    function makeFieldLayer(count, size, opacity, speed) {
+        var positions = new Float32Array(count * 3);
+        for (var i = 0; i < count; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 22;
+            positions[i * 3 + 1] = Math.random() * 6.5 - 1.2;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
+        }
+        var geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        var mat = new THREE.PointsMaterial({
+            color: color,
+            size: size,
+            transparent: true,
+            opacity: opacity,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+        var points = new THREE.Points(geo, mat);
+        var base = new Float32Array(count);
+        for (var j = 0; j < count; j++) {
+            base[j] = positions[j * 3 + 1];
+        }
+        scene.add(points);
+        return {
+            update: function (t) {
+                var attr = geo.attributes.position;
+                for (var i = 0; i < count; i++) {
+                    var y = base[i] - ((t * speed + i * 0.37) % 5.6);
+                    attr.array[i * 3 + 1] = y;
+                }
+                attr.needsUpdate = true;
+            }
+        };
+    }
 
-    function beam(x, z, radius, height, opacity) {
+    var dust = makeFieldLayer(420, 0xffffff, 0.05, 0.55, 0.06);
+    var stars = makeFieldLayer(120, 0xffffff, 0.08, 0.95, 0.16);
+
+    function makeMountain(z, color, height) {
+        var shape = new THREE.Shape();
+        shape.moveTo(-26, 0);
+        var xs = [-20, -15, -10, -5, 0, 5, 10, 15, 20, 26];
+        var peaks = [0.45, 1.0, 0.3, 1.2, 0.5, 1.0, 0.25, 0.9, 0.4, 0];
+        for (var i = 0; i < xs.length; i++) {
+            shape.lineTo(xs[i], peaks[i] * height);
+        }
+        shape.lineTo(26, 0);
+        shape.closePath();
+
+        var geo = new THREE.ShapeGeometry(shape);
+        geo.rotateX(-Math.PI / 2);
         var mesh = new THREE.Mesh(
-            new THREE.ConeGeometry(radius, height, 28, 1, true),
-            new THREE.MeshBasicMaterial({
-                color: 0xffffff,
-                transparent: true,
-                opacity: opacity,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false,
-                side: THREE.DoubleSide
-            })
+            geo,
+            new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0, depthWrite: false })
         );
-        mesh.rotation.x = Math.PI;
-        mesh.position.set(x, stageY + height / 2, z);
+        mesh.position.set(0, 0, -z);
         scene.add(mesh);
-        beams.push({ mesh: mesh, base: opacity, phase: beams.length });
         return mesh;
     }
 
-    beam(0, 1.8, 1.15, 6.4, 0.075);
-    beam(0, -1.8, 0.85, 5.6, 0.05);
-    beam(2.6, 0, 0.7, 5.2, 0.045);
-    beam(-2.6, 0, 0.7, 5.2, 0.045);
-    beam(1.7, 1.7, 0.6, 4.8, 0.04);
-    beam(-1.7, -1.7, 0.6, 4.8, 0.04);
-    beam(0, 0, 0.5, 6.8, 0.08);
+    var mountainsFar = makeMountain(3.2, 0x0d1015, 2.6);
+    var mountainsNear = makeMountain(2.4, 0x08090c, 1.9);
 
     var progress = 0;
 
@@ -143,10 +146,14 @@ import * as THREE from "three";
         camera.position.x = Math.sin(t * 0.2) * 0.15;
         camera.lookAt(0, 0.15 - progress * 0.85, 0);
 
-        for (var i = 0; i < beams.length; i++) {
-            var b = beams[i];
-            b.mesh.material.opacity = b.base * (0.75 + 0.25 * Math.sin(t * 1.4 + b.phase * 1.7));
-        }
+        dust.update(t);
+        stars.update(t);
+
+        var mountainIn = Math.min(1, Math.max(0, (progress - 0.78) / 0.22));
+        mountainsFar.material.opacity = mountainIn * 0.9;
+        mountainsFar.position.y = (mountainIn - 1) * 1.6;
+        mountainsNear.material.opacity = mountainIn;
+        mountainsNear.position.y = (mountainIn - 1) * 2.2;
 
         renderer.render(scene, camera);
     }
