@@ -693,3 +693,70 @@
         downY = null;
     });
 })();
+
+(function () {
+    var AMP = 14;
+    var SCALE = 1.08;
+    var cards = [];
+    var running = false;
+    var last = performance.now();
+
+    function tick(now) {
+        var dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        var damp = Math.exp(-7.5 * dt);
+        var k = 100 * dt;
+        var active = false;
+        for (var i = 0; i < cards.length; i++) {
+            var c = cards[i];
+            c.vx += (c.tx - c.rx) * k;
+            c.vx *= damp;
+            c.rx += c.vx * dt;
+            c.vy += (c.ty - c.ry) * k;
+            c.vy *= damp;
+            c.ry += c.vy * dt;
+            c.vs += (c.ts - c.s) * k;
+            c.vs *= damp;
+            c.s += c.vs * dt;
+            if (Math.abs(c.rx - c.tx) > 0.02 || Math.abs(c.ry - c.ty) > 0.02 || Math.abs(c.s - c.ts) > 0.002) {
+                active = true;
+            }
+            c.img.style.transform = "rotateX(" + c.rx.toFixed(2) + "deg) rotateY(" + c.ry.toFixed(2) + "deg) scale(" + c.s.toFixed(4) + ")";
+        }
+        if (active) {
+            requestAnimationFrame(tick);
+        } else {
+            running = false;
+        }
+    }
+
+    function start() {
+        if (!running) {
+            running = true;
+            requestAnimationFrame(tick);
+        }
+    }
+
+    document.querySelectorAll(".gallery-item").forEach(function (item) {
+        var img = item.querySelector("img");
+        if (!img) return;
+        var c = { img: img, rx: 0, ry: 0, s: 1, tx: 0, ty: 0, ts: 1, vx: 0, vy: 0, vs: 0 };
+        cards.push(c);
+        item.addEventListener("pointermove", function (e) {
+            if (e.pointerType !== "mouse") return;
+            var rect = item.getBoundingClientRect();
+            var ox = e.clientX - rect.left - rect.width / 2;
+            var oy = e.clientY - rect.top - rect.height / 2;
+            c.tx = (oy / (rect.height / 2)) * -AMP;
+            c.ty = (ox / (rect.width / 2)) * AMP;
+            c.ts = SCALE;
+            start();
+        });
+        item.addEventListener("pointerleave", function () {
+            c.tx = 0;
+            c.ty = 0;
+            c.ts = 1;
+            start();
+        });
+    });
+})();
