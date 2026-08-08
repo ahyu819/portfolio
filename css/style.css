@@ -25,6 +25,24 @@ body {
     line-height: 1.7;
 }
 
+#scene3d {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#scene3d canvas {
+    display: block;
+}
+
+#hero,
+section,
+footer {
+    position: relative;
+    z-index: 1;
+}
+
 header {
     position: fixed;
     top: 0;

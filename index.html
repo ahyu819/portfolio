@@ -34,8 +34,9 @@
         </div>
     </header>
 
+    <div id="scene3d" aria-hidden="true"></div>
+
     <section id="hero">
-        <video class="hero-bg" autoplay muted loop playsinline src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
         <div class="hero-inner">
             <h1>你好，我是张三</h1>
             <p class="hero-role">视觉创作者 · 作品记录站</p>
@@ -155,5 +156,13 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="js/scene3d.js"></script>
 </body>
 </html>
