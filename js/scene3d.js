@@ -56,7 +56,7 @@ import * as THREE from "three";
     rimLight.position.set(-4, 2.5, -3);
     scene.add(rimLight);
 
-    function makeFieldLayer(count, size, opacity, speed) {
+    function makeFieldLayer(count, color, size, opacity, speed) {
         var positions = new Float32Array(count * 3);
         for (var i = 0; i < count; i++) {
             positions[i * 3] = (Math.random() - 0.5) * 22;
