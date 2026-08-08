@@ -670,7 +670,26 @@
         }
     }
 
+    var downX = null;
+    var downY = null;
+
     document.addEventListener("pointerdown", function (e) {
+        downX = e.clientX;
+        downY = e.clientY;
+    });
+
+    document.addEventListener("pointerup", function (e) {
+        if (downX == null) return;
+        var dx = e.clientX - downX;
+        var dy = e.clientY - downY;
+        downX = null;
+        downY = null;
+        if (Math.abs(dx) > 6 || Math.abs(dy) > 6) return;
         spawn(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("pointercancel", function () {
+        downX = null;
+        downY = null;
     });
 })();
