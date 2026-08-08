@@ -871,3 +871,10 @@ footer {
     gap: 8px;
     margin-top: 16px;
 }
+
+#click-spark {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}

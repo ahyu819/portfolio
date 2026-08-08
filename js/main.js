@@ -599,3 +599,78 @@
         setup(moreBtns[i]);
     }
 })();
+
+(function () {
+    var DURATION = 400;
+    var SPARK_COUNT = 8;
+    var SPARK_RADIUS = 15;
+    var SPARK_SIZE = 7;
+
+    var canvas = document.createElement("canvas");
+    canvas.id = "click-spark";
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext("2d");
+    var dpr = window.devicePixelRatio || 1;
+
+    function resize() {
+        canvas.width = Math.round(window.innerWidth * dpr);
+        canvas.height = Math.round(window.innerHeight * dpr);
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    var sparks = [];
+    var running = false;
+
+    function easeOut(t) {
+        return t * (2 - t);
+    }
+
+    function spawn(x, y) {
+        var now = performance.now();
+        for (var i = 0; i < SPARK_COUNT; i++) {
+            sparks.push({
+                x: x * dpr,
+                y: y * dpr,
+                angle: (2 * Math.PI * i) / SPARK_COUNT,
+                start: now
+            });
+        }
+        if (!running) {
+            running = true;
+            requestAnimationFrame(draw);
+        }
+    }
+
+    function draw(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        sparks = sparks.filter(function (s) {
+            var elapsed = now - s.start;
+            if (elapsed >= DURATION) return false;
+            var t = easeOut(elapsed / DURATION);
+            var dist = t * SPARK_RADIUS * dpr;
+            var len = SPARK_SIZE * (1 - t) * dpr;
+            var x1 = s.x + dist * Math.cos(s.angle);
+            var y1 = s.y + dist * Math.sin(s.angle);
+            var x2 = s.x + (dist + len) * Math.cos(s.angle);
+            var y2 = s.y + (dist + len) * Math.sin(s.angle);
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 2 * dpr;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            return true;
+        });
+        if (sparks.length) {
+            requestAnimationFrame(draw);
+        } else {
+            running = false;
+        }
+    }
+
+    document.addEventListener("pointerdown", function (e) {
+        spawn(e.clientX, e.clientY);
+    });
+})();
