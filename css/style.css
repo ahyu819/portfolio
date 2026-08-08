@@ -501,6 +501,17 @@ section {
     perspective: 800px;
 }
 
+.gallery-item.active {
+    position: relative;
+    z-index: 10;
+}
+
+.gallery-item.active img {
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.9),
+        0 0 26px rgba(255, 255, 255, 0.28);
+}
+
 .gallery-item img {
     width: 100%;
     display: block;

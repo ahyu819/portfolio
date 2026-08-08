@@ -742,6 +742,10 @@
         if (!img) return;
         var c = { img: img, rx: 0, ry: 0, s: 1, tx: 0, ty: 0, ts: 1, vx: 0, vy: 0, vs: 0 };
         cards.push(c);
+        item.addEventListener("pointerenter", function (e) {
+            if (e.pointerType !== "mouse") return;
+            item.classList.add("active");
+        });
         item.addEventListener("pointermove", function (e) {
             if (e.pointerType !== "mouse") return;
             var rect = item.getBoundingClientRect();
@@ -753,6 +757,7 @@
             start();
         });
         item.addEventListener("pointerleave", function () {
+            item.classList.remove("active");
             c.tx = 0;
             c.ty = 0;
             c.ts = 1;
