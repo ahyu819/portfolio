@@ -695,7 +695,7 @@
 })();
 
 (function () {
-    var AMP = 14;
+    var AMP = 7;
     var SCALE = 1.08;
     var cards = [];
     var running = false;
