@@ -737,7 +737,7 @@
         }
     }
 
-    document.querySelectorAll(".gallery-item").forEach(function (item) {
+    document.querySelectorAll(".gallery-item, .work-card").forEach(function (item) {
         var img = item.querySelector("img");
         if (!img) return;
         var c = { img: img, rx: 0, ry: 0, s: 1, tx: 0, ty: 0, ts: 1, vx: 0, vy: 0, vs: 0 };

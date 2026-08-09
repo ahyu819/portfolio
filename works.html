@@ -36,61 +36,44 @@
 
     <div class="page-hero">
         <h1>全部作品</h1>
-        <p>目前精选三件作品，详细说明见下，里程碑 5 会填充真实内容</p>
+        <p>点击作品缩略图可全屏查看详情；按类型筛选，里程碑 5 会填充真实内容</p>
     </div>
 
-    <section class="reveal">
-        <div class="section-header">
-            <div class="section-eyebrow">Work 01 · 视频作品</div>
-            <h2>视频作品 · 占位标题</h2>
-        </div>
-        <div class="detail-card">
-            <video controls preload="metadata" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
-            <p class="detail-desc">这里是视频作品的详细说明：创作背景、做了什么、用什么做的、达到什么效果。里程碑 5 时把真实文案填进来。</p>
-            <div class="detail-tags">
-                <span class="skill-chip">分类</span>
-                <span class="skill-chip">工具</span>
-                <span class="skill-chip">年份</span>
-            </div>
-        </div>
-    </section>
+    <div id="works-filter" class="works-filter reveal"></div>
 
-    <section class="reveal detail-section">
-        <div class="section-header">
-            <div class="section-eyebrow">Work 02 · 图片作品</div>
-            <h2>图片作品 · 占位标题 1</h2>
-        </div>
-        <div class="detail-card">
-            <img src="https://picsum.photos/seed/work1/1200/750" alt="作品 1 占位图">
-            <p class="detail-desc">这里是图片作品 1 的详细说明：创作背景、做了什么、用什么做的。点击图片可以放大查看细节。</p>
-            <div class="detail-tags">
-                <span class="skill-chip">分类</span>
-                <span class="skill-chip">工具</span>
-                <span class="skill-chip">年份</span>
-            </div>
-        </div>
-    </section>
+    <div id="works-grid-wrap" class="reveal">
+        <div id="works-grid" class="works-grid"></div>
+    </div>
 
-    <section class="reveal detail-section">
-        <div class="section-header">
-            <div class="section-eyebrow">Work 03 · 图片作品</div>
-            <h2>图片作品 · 占位标题 2</h2>
-        </div>
-        <div class="detail-card">
-            <img src="https://picsum.photos/seed/work2/1200/600" alt="作品 2 占位图">
-            <p class="detail-desc">这里是图片作品 2 的详细说明：创作背景、做了什么、用了做的。详细里程碑 5 的填充真实内容。</p>
-            <div class="detail-tags">
-                <span class="skill-chip">分类</span>
-                <span class="skill-chip">工具</span>
-                <span class="skill-chip">年份</span>
+    <div id="snapshot" class="snapshot" role="dialog" aria-modal="true">
+        <button class="snapshot-close" type="button" aria-label="关闭">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="snapshot-inner">
+            <div id="snapshot-media" class="snapshot-media"></div>
+            <div class="snapshot-info">
+                <h2 id="snapshot-title"></h2>
+                <div class="snapshot-meta">
+                    <span id="snapshot-type" class="work-chip"></span>
+                </div>
+                <p id="snapshot-desc"></p>
+                <div id="snapshot-tags" class="detail-tags"></div>
             </div>
         </div>
-    </section>
+    </div>
 
     <footer>
         <p>© 2026 Ahyu · 用爱搭建</p>
     </footer>
 
+    <div id="lightbox">
+        <div class="lightbox-ring">
+            <div class="lightbox-inner" id="lightbox-media"></div>
+        </div>
+        <div class="lightbox-hint">滚轮 / 双指缩放 · 点击空白关闭</div>
+    </div>
+
     <script src="js/main.js"></script>
+    <script src="js/works.js"></script>
 </body>
 </html>
