@@ -227,7 +227,9 @@
         }
     }
 
-    document.querySelectorAll("[data-video]").forEach(function (wrap) {
+    window.toggleFullscreen = toggleFullscreen;
+
+    function initVideoPlayer(wrap) {
         var video = wrap.querySelector(".work-video");
         if (!video) return;
 
@@ -392,7 +394,10 @@
         });
 
         syncIcons();
-    });
+    }
+
+    window.initVideoPlayer = initVideoPlayer;
+    document.querySelectorAll("[data-video]").forEach(initVideoPlayer);
 
     var navLinks = document.querySelectorAll("nav a");
     var sections = document.querySelectorAll("section[id]");

@@ -126,21 +126,59 @@
     var snapshotTags = document.getElementById("snapshot-tags");
     var snapshotClose = snapshot.querySelector(".snapshot-close");
 
+    var FS_ENTER =
+        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+    var FS_EXIT =
+        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+    var fsIconBtn = null;
+
+    document.addEventListener("fullscreenchange", function () {
+        if (fsIconBtn) {
+            fsIconBtn.innerHTML = document.fullscreenElement ? FS_EXIT : FS_ENTER;
+        }
+    });
+
     function openSnapshot(w) {
         snapshotMedia.innerHTML = "";
         if (w.video) {
-            var v = document.createElement("video");
-            v.src = w.video;
-            v.controls = true;
-            v.preload = "metadata";
-            v.draggable = false;
-            snapshotMedia.appendChild(v);
+            var wrap = document.createElement("div");
+            wrap.className = "work-media snapshot-video";
+            wrap.setAttribute("data-video", "");
+            wrap.innerHTML =
+                '<video class="work-video" preload="metadata" src="' + w.video + '"></video>' +
+                '<div class="vp-controls">' +
+                '<button class="vp-center-btn" type="button" aria-label="播放或暂停"></button>' +
+                '<div class="vp-bottom">' +
+                '<button class="vp-play-toggle" type="button" aria-label="播放或暂停"></button>' +
+                '<div class="vp-progress"><div class="vp-progress-fill"></div></div>' +
+                '<span class="vp-time">0:00 / 0:00</span>' +
+                '<div class="vp-volume">' +
+                '<button class="vp-volume-btn" type="button" aria-label="音量"></button>' +
+                '<div class="vp-volume-panel"><div class="vp-vol-slider"><div class="vp-vol-fill"></div><div class="vp-vol-handle"></div></div></div>' +
+                "</div>" +
+                '<button class="vp-fullscreen" type="button" aria-label="全屏"></button>' +
+                "</div></div>";
+            snapshotMedia.appendChild(wrap);
+            if (window.initVideoPlayer) window.initVideoPlayer(wrap);
         } else {
+            var iwrap = document.createElement("div");
+            iwrap.className = "snapshot-imgwrap";
             var img = document.createElement("img");
             img.src = w.img;
             img.alt = w.title;
             img.draggable = false;
-            snapshotMedia.appendChild(img);
+            var fsBtn = document.createElement("button");
+            fsBtn.type = "button";
+            fsBtn.className = "vp-fullscreen snapshot-fs";
+            fsBtn.setAttribute("aria-label", "全屏");
+            fsBtn.innerHTML = FS_ENTER;
+            fsBtn.addEventListener("click", function () {
+                if (window.toggleFullscreen) window.toggleFullscreen(iwrap);
+            });
+            iwrap.appendChild(img);
+            iwrap.appendChild(fsBtn);
+            snapshotMedia.appendChild(iwrap);
+            fsIconBtn = fsBtn;
         }
         snapshotTitle.textContent = w.title;
         snapshotType.textContent = w.type;

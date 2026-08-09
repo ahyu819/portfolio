@@ -1187,3 +1187,57 @@ body.snapshot-lock {
         max-height: 45vh;
     }
 }
+
+/* ===== 快照媒体：自定义播放器 + 图片全屏按钮 ===== */
+.snapshot-media .work-media video {
+    object-fit: contain;
+}
+
+.snapshot-imgwrap {
+    position: relative;
+    background: #000;
+}
+
+.snapshot-imgwrap img {
+    display: block;
+    width: 100%;
+    max-height: 62vh;
+    object-fit: contain;
+}
+
+.snapshot-fs {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(10, 12, 16, 0.5);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s;
+}
+
+.snapshot-fs:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.snapshot-imgwrap:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.snapshot-imgwrap:fullscreen img {
+    max-height: none;
+    height: 100%;
+}
