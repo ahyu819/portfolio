@@ -1053,6 +1053,10 @@ html[data-theme="light"] .tag-chip.active {
     margin-top: 28px;
 }
 
+.skills-sec {
+    padding-bottom: 48px;
+}
+
 .skill-tile {
     position: relative;
     width: 58px;
