@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=46">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-    <title>张三的作品集</title>
+    <title>Ahyu的作品集</title>
 </head>
 <body>
     <header>
@@ -29,77 +29,36 @@
             </a>
             <a class="nav-sayhi" href="about.html">
                 <span class="nav-sayhi-bg"></span>
-                <span class="nav-sayhi-inner">关于我</span>
+                <span class="nav-sayhi-inner">关于作者</span>
             </a>
         </div>
     </header>
 
     <div id="scene3d" aria-hidden="true"></div>
-    <div id="shapegrid" aria-hidden="true"></div>
 
     <section id="hero">
         <div class="hero-inner">
-            <h1>你好，我是张三</h1>
-            <p class="hero-role">视觉创作者 · 作品记录站</p>
-            <p class="hero-desc">这里是我的作品集，用图片和视频记录我做过的每一件事。</p>
+            <h1>你好，我是阿宇 Ahyu</h1>
+            <p class="hero-role">三维设计 · 作品记录站</p>
+            <p class="hero-desc">全流程独立完成，作品持续更新，欢迎交流与合作。</p>
         </div>
+        <button class="model-next-btn" type="button">NEXT</button>
+        <a class="scroll-hint" href="#works" aria-label="向下滑动">
+            <svg width="14" height="56" viewBox="0 0 14 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 1 V50" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M1.5 45 L7 52 L12.5 45" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+            <span>向下滑动</span>
+        </a>
     </section>
 
     <section id="works">
         <div class="section-header">
             <div class="section-eyebrow">Featured Works</div>
             <h2>精选作品</h2>
-            <p class="section-sub">挑几件最满意的作品放在最前面</p>
+            <p class="section-sub">精选作品有更加详细的创作过程说明</p>
         </div>
-        <div class="works-grid">
-            <div class="work-card reveal">
-                <div class="work-media" data-video>
-                    <video class="work-video" preload="metadata" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
-                    <div class="vp-controls">
-                        <button class="vp-center-btn" type="button" aria-label="播放或暂停"></button>
-                        <div class="vp-bottom">
-                            <button class="vp-play-toggle" type="button" aria-label="播放或暂停"></button>
-                            <div class="vp-progress">
-                                <div class="vp-progress-fill"></div>
-                            </div>
-                            <span class="vp-time">0:00 / 0:00</span>
-                            <div class="vp-volume">
-                                <button class="vp-volume-btn" type="button" aria-label="音量"></button>
-                                <div class="vp-volume-panel">
-                                    <div class="vp-vol-slider">
-                                        <div class="vp-vol-fill"></div>
-                                        <div class="vp-vol-handle"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="vp-fullscreen" type="button" aria-label="全屏"></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="work-info">
-                    <h3>视频作品 · 占位标题</h3>
-                    <p>点击视频唤出控制条，用中间按钮播放/暂停，右下角可放大。</p>
-                </div>
-            </div>
-            <div class="work-card reveal">
-                <div class="work-media">
-                    <img src="https://picsum.photos/seed/work1/800/500" alt="作品 1 占位图">
-                </div>
-                <div class="work-info">
-                    <h3>图片作品 · 占位标题 1</h3>
-                    <p>作品简介写在这里，一句话说清楚这件作品是什么。</p>
-                </div>
-            </div>
-            <div class="work-card reveal">
-                <div class="work-media">
-                    <img src="https://picsum.photos/seed/work2/800/500" alt="作品 2 占位图">
-                </div>
-                <div class="work-info">
-                    <h3>图片作品 · 占位标题 2</h3>
-                    <p>作品简介写在这里，一句话说清楚这件作品是什么。</p>
-                </div>
-            </div>
-        </div>
+        <div class="works-grid" id="featured-grid"></div>
         <div class="works-more reveal">
             <a class="more-btn" href="works.html">
                 <span class="more-btn-fx"></span>
@@ -112,18 +71,9 @@
         <div class="section-header">
             <div class="section-eyebrow">Gallery</div>
             <h2>作品图集</h2>
-            <p class="section-sub">瀑布流展示，点击任意图片可以放大查看</p>
+            <p class="section-sub">随机展示部分，点击放大</p>
         </div>
-        <div class="gallery-cols">
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g1/600/800" alt="图集 1"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g2/600/450" alt="图集 2"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g3/600/900" alt="图集 3"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g4/600/500" alt="图集 4"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g5/600/750" alt="图集 5"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g6/600/420" alt="图集 6"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g7/600/850" alt="图集 7"></div>
-            <div class="gallery-item reveal"><img src="https://picsum.photos/seed/g8/600/480" alt="图集 8"></div>
-        </div>
+        <div class="gallery-cols" id="gallery-cols"></div>
         <div class="works-more reveal">
             <a class="more-btn" href="works.html">
                 <span class="more-btn-fx"></span>
@@ -139,14 +89,13 @@
             <p class="section-sub">合作、交流、招聘，都可以随时找我</p>
         </div>
         <div class="contact-card reveal">
-            <a class="contact-item" href="mailto:your@email.com">邮箱：your@email.com</a>
-            <div class="contact-item">微信：请填写你的微信号</div>
-            <div class="contact-item">更多社交链接将在里程碑 5 补充</div>
+            <a class="contact-item" href="mailto:2827290813@qq.com">邮箱：2827290813@qq.com</a>
+            <div class="contact-item">微信：zhenhaoya500</div>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 张三 · 用爱搭建</p>
+        <p>© 2026 Ahyu · 用爱搭建</p>
     </footer>
 
     <div id="lightbox">
@@ -156,15 +105,20 @@
         <div class="lightbox-hint">滚轮 / 双指缩放 · 点击空白关闭</div>
     </div>
 
-    <script src="js/main.js"></script>
-    <script src="js/shapegrid.js"></script>
+    <script src="js/main.js?v=9"></script>
+    <script src="js/site-data.js?v=1"></script>
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+                "three": "./js/vendor/three/three.module.js?v=1",
+                "three/addons/": "./js/vendor/three/addons/",
+                "ogl": "./js/vendor/ogl/ogl.module.js?v=1"
             }
         }
     </script>
-    <script type="module" src="js/scene3d.js"></script>
+    <script type="module" src="js/scene3d.js?v=18"></script>
+    <script type="module" src="js/lightrays.js?v=1"></script>
+    <script type="module" src="js/gradientwaves.js?v=3"></script>
+    <script src="js/fabmenu.js?v=6"></script>
 </body>
 </html>

@@ -13,6 +13,13 @@
     var speed = 0.24;
     var offsetX = 0;
 
+    function gridAlpha() {
+        var light = document.documentElement.getAttribute("data-theme") === "light";
+        var rgb = light ? "16, 18, 22" : "255, 255, 255";
+        var maxA = light ? 0.1 : 0.2;
+        return { rgb: rgb, maxA: maxA };
+    }
+
     function resize() {
         canvas.width = Math.round(wrap.clientWidth * dpr);
         canvas.height = Math.round(wrap.clientHeight * dpr);
@@ -53,7 +60,8 @@ for (var col = -3; col < cols; col++) {
                 fade = Math.max(0, Math.min(1, fade));
                 fade = fade * fade;
 
-                ctx.strokeStyle = "rgba(255, 255, 255, " + (0.2 * fade).toFixed(3) + ")";
+                var g = gridAlpha();
+                ctx.strokeStyle = "rgba(" + g.rgb + ", " + (g.maxA * fade).toFixed(3) + ")";
                 ctx.lineWidth = 1 * dpr;
                 drawHex(cx, cy);
                 ctx.stroke();

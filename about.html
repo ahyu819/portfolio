@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=46">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -29,59 +29,85 @@
             </a>
             <a class="nav-sayhi active" href="about.html">
                 <span class="nav-sayhi-bg"></span>
-                <span class="nav-sayhi-inner">关于我</span>
+                <span class="nav-sayhi-inner">关于作者</span>
             </a>
         </div>
     </header>
 
     <div class="page-hero">
         <h1>关于我</h1>
-        <p>简历式简介，求职时直接发给招聘方看</p>
+        <p>关于阿宇 · 三维设计</p>
     </div>
 
-    <section class="reveal">
+    <section class="reveal profile-sec">
         <div class="section-header">
             <div class="section-eyebrow">Profile</div>
             <h2>个人简介</h2>
         </div>
-        <p class="section-sub">在这里写一段自我介绍：你是谁、做什么的、擅长什么、想找什么方向的工作。里程碑 5 时我们一起来填。</p>
+        <p class="section-sub">2017 年，我在一张便签上写了两句话：「要写一本书，还要拍一部电影。」书还没写，电影也还没拍。但后来我撞见了三维动画，发现它是一个人离做片子最近的路，不用等谁来立项，不用凑班子，一台电脑就能把脑子里的画面做出来。</p>
+        <p class="section-sub">现在我做三维设计，建模、材质、渲染全流程独立完成。对我来说，每件作品都是在拍一个画面。想法先有，然后让它在屏幕里成真。</p>
+        <p class="section-sub">屏幕之外，我在看电影、打游戏，偶尔摄影。其实都是同一件事——喜欢琢磨画面怎么讲故事，也喜欢自己动手做一个。</p>
+        <p class="section-sub">那张便签还留着。电影迟早会拍；在那之前，作品会一直更新。</p>
+        <figure class="about-note">
+            <img src="images/about-note.jpg" alt="2017 年的便签：要写一本书，还要拍一部电影" loading="lazy" draggable="false">
+            <figcaption>2017.9 · 那张便签</figcaption>
+        </figure>
     </section>
 
     <section class="reveal">
         <div class="section-header">
             <div class="section-eyebrow">Skills</div>
             <h2>技能</h2>
+            <p class="section-sub">主要工具，其他软件也在持续上手</p>
         </div>
-        <div class="skills">
-            <span class="skill-chip">技能 1</span>
-            <span class="skill-chip">技能 2</span>
-            <span class="skill-chip">技能 3</span>
-        </div>
-    </section>
-
-    <section class="reveal">
-        <div class="section-header">
-            <div class="section-eyebrow">Experience</div>
-            <h2>经历</h2>
-        </div>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="time">20xx 年 - 至今</div>
-                <h3>经历占位标题</h3>
-                <p>在这里描述一段教育或工作经历。</p>
+        <div class="skills skills-icons">
+            <div class="skill-tile" tabindex="0">
+                <img src="images/icons/blender.png" alt="Blender" draggable="false">
+                <span class="skill-tip">Blender</span>
             </div>
-            <div class="timeline-item">
-                <div class="time">20xx 年 - 20xx 年</div>
-                <h3>经历占位标题</h3>
-                <p>在这里描述另一段经历。</p>
+            <div class="skill-tile" tabindex="0">
+                <img src="images/icons/zbrush-128px.png" alt="ZBrush" draggable="false">
+                <span class="skill-tip">ZBrush</span>
+            </div>
+            <div class="skill-tile" tabindex="0">
+                <img src="images/icons/substance.png" alt="Substance Painter" draggable="false">
+                <span class="skill-tip">Substance Painter</span>
+            </div>
+            <div class="skill-tile" tabindex="0">
+                <img src="images/icons/ps.png" alt="Photoshop" draggable="false">
+                <span class="skill-tip">Photoshop</span>
+            </div>
+            <div class="skill-tile" tabindex="0">
+                <img src="images/icons/ai.png" alt="Illustrator" draggable="false">
+                <span class="skill-tip">Illustrator</span>
+            </div>
+            <div class="skill-tile" tabindex="0">
+                <span class="skill-letter" style="color: var(--muted)">+</span>
+                <span class="skill-tip">其他工具持续点亮中</span>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 张三 · 用爱搭建</p>
+        <p>© 2026 Ahyu · 用爱搭建</p>
     </footer>
 
-    <script src="js/main.js"></script>
+    <div id="lightbox">
+        <div class="lightbox-ring">
+            <div class="lightbox-inner" id="lightbox-media"></div>
+        </div>
+        <div class="lightbox-hint">滚轮 / 双指缩放 · 点击空白关闭</div>
+    </div>
+
+    <script src="js/main.js?v=9"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "ogl": "./js/vendor/ogl/ogl.module.js?v=1"
+            }
+        }
+    </script>
+    <script type="module" src="js/gradientwaves.js?v=3"></script>
+    <script src="js/fabmenu.js?v=6"></script>
 </body>
 </html>

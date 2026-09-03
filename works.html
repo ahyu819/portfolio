@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=46">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <title>全部作品 · Ahyu的作品集</title>
 </head>
-<body>
+<body class="no-bg-edge">
     <header>
         <div class="nav-pill">
             <div class="nav-logo">
@@ -29,21 +29,31 @@
             </a>
             <a class="nav-sayhi" href="about.html">
                 <span class="nav-sayhi-bg"></span>
-                <span class="nav-sayhi-inner">关于我</span>
+                <span class="nav-sayhi-inner">关于作者</span>
             </a>
         </div>
     </header>
 
     <div class="page-hero">
         <h1>全部作品</h1>
-        <p>点击作品缩略图可全屏查看详情；按类型筛选，里程碑 5 会填充真实内容</p>
+        <p>点击作品缩略图查看详情；底部导航切换分类，筛选框按题材过滤</p>
+        <div class="works-tagbar" id="works-tagbar">
+            <button class="tag-chip" type="button" data-tag="硬表面">硬表面</button>
+            <button class="tag-chip" type="button" data-tag="人物">人物</button>
+            <button class="tag-chip" type="button" data-tag="场景">场景</button>
+            <span class="tagbar-hint">选中即筛选 · 空选即全都在</span>
+        </div>
     </div>
-
-    <div id="works-filter" class="works-filter reveal"></div>
 
     <div id="works-grid-wrap" class="reveal">
         <div id="works-grid" class="works-grid"></div>
     </div>
+
+    <nav class="bottom-nav" id="bottom-nav" aria-label="作品分类">
+        <button class="bnav-btn" type="button" data-cat="精选">精选</button>
+        <button class="bnav-btn" type="button" data-cat="图片">图片</button>
+        <button class="bnav-btn" type="button" data-cat="视频">视频</button>
+    </nav>
 
     <div id="snapshot" class="snapshot" role="dialog" aria-modal="true">
         <button class="snapshot-close" type="button" aria-label="关闭">
@@ -58,6 +68,7 @@
                 </div>
                 <p id="snapshot-desc"></p>
                 <div id="snapshot-tags" class="detail-tags"></div>
+                <div id="snapshot-gallery" class="snapshot-gallery"></div>
             </div>
         </div>
     </div>
@@ -73,7 +84,17 @@
         <div class="lightbox-hint">滚轮 / 双指缩放 · 点击空白关闭</div>
     </div>
 
-    <script src="js/main.js"></script>
-    <script src="js/works.js"></script>
+    <script src="js/main.js?v=9"></script>
+    <script src="js/site-data.js?v=1"></script>
+    <script src="js/works.js?v=13"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "ogl": "./js/vendor/ogl/ogl.module.js?v=1"
+            }
+        }
+    </script>
+    <script type="module" src="js/prism.js?v=2"></script>
+    <script src="js/fabmenu.js?v=6"></script>
 </body>
 </html>

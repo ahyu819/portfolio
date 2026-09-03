@@ -1,55 +1,5 @@
 (function () {
-    var WORKS = [
-        {
-            title: "视频作品 · 占位标题",
-            type: "视频",
-            video: "https://www.w3schools.com/html/mov_bbb.mp4",
-            img: "https://picsum.photos/seed/work1/900/560",
-            featured: true,
-            desc: "这里是视频作品的详细说明：创作背景、做了什么、用什么做的、达到什么效果。里程碑 5 时把真实文案填进来。",
-            tags: ["分类", "工具", "年份"]
-        },
-        {
-            title: "图片作品 · 占位标题 1",
-            type: "图片",
-            img: "https://picsum.photos/seed/work2/900/560",
-            isNew: true,
-            desc: "这里是图片作品 1 的详细说明：创作背景、做了什么、用什么做的、拍 / 画了什么主题。里程碑 5 时把真实内容填进来。",
-            tags: ["分类", "工具", "年份"]
-        },
-        {
-            title: "图片作品 · 占位标题 2",
-            type: "图片",
-            img: "https://picsum.photos/seed/work3/900/560",
-            isNew: true,
-            desc: "这里是图片作品 2 的详细说明：创作背景、做了什么、用了什么工具。里程碑 5 时把真实内容填进来。",
-            tags: ["分类", "工具", "年份"]
-        },
-        {
-            title: "交互网页 · 占位标题",
-            type: "交互",
-            img: "https://picsum.photos/seed/work4/900/560",
-            desc: "这里是交互网页作品的详细说明：页面思路、动效实现、技术栈。里程碑 5 时把真实内容填进来。",
-            tags: ["分类", "工具", "年份"]
-        },
-        {
-            title: "品牌设计 · 占位标题",
-            type: "设计",
-            img: "https://picsum.photos/seed/work5/900/560",
-            desc: "这里是品牌设计作品的详细说明：概念、方案、应用场景。里程碑 5 时把真实内容填进来。",
-            tags: ["分类", "工具", "年份"]
-        },
-        {
-            title: "动效短片 · 占位标题",
-            type: "视频",
-            img: "https://picsum.photos/seed/work6/900/560",
-            isNew: true,
-            desc: "这里是动效短片的详细说明：分镜、节奏、渲染输出。里程碑 5 时把真实内容填进来。",
-            tags: ["分类", "工具", "年份"]
-        }
-    ];
-
-    var TYPES = ["全部", "视频", "图片", "交互", "设计"];
+    var WORKS = [];
 
     var gridWrap = document.getElementById("works-grid-wrap");
     var grid = document.getElementById("works-grid");
@@ -67,63 +17,68 @@
         { threshold: 0.12 }
     );
 
-    function buildFilter() {
-        var bar = document.getElementById("works-filter");
-        if (!bar) return;
-        TYPES.forEach(function (t, i) {
-            var btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "filter-chip" + (i === 0 ? " active" : "");
-            btn.textContent = t;
-            btn.addEventListener("click", function () {
-                if (btn.classList.contains("active")) return;
-                bar.querySelectorAll(".filter-chip").forEach(function (b) {
-                    b.classList.remove("active");
-                });
-                btn.classList.add("active");
-                renderGrid(t);
-            });
-            bar.appendChild(btn);
-        });
+    var curCat = null;
+    var curTag = null;
+
+    function matches(item) {
+        if (curCat && curCat !== "全部") {
+            if (curCat === "精选") {
+                if (!item.featured) return false;
+            } else if (curCat === "图片") {
+                if (item.type === "视频") return false;
+            } else if (curCat === "视频") {
+                if (item.type !== "视频") return false;
+            }
+        }
+        if (curTag && item.addTag !== curTag) return false;
+        return true;
     }
 
-    function badge(item) {
-        if (item.featured) return '<span class="work-badge featured">精选</span>';
-        if (item.isNew) return '<span class="work-badge">NEW</span>';
-        return "";
+    function badge(text) {
+        return '<span class="work-badge">' + text + "</span>";
     }
 
-    function renderGrid(type) {
+    function categoryTag(item) {
+        return item.type === "视频" ? "视频" : "图片";
+    }
+
+    function renderGrid() {
         grid.innerHTML = "";
         WORKS.forEach(function (item, idx) {
-            if (type !== "全部" && item.type !== type) return;
+            if (!matches(item)) return;
             var card = document.createElement("figure");
             card.className = "reveal work-card";
             card.setAttribute("data-index", idx);
             card.innerHTML =
                 '<div class="work-thumb">' +
-                badge(item) +
+                (item.featured ? '<span class="work-badge featured">精选</span>' : "") +
                 '<img src="' + item.img + '" alt="' + item.title + '" loading="lazy" draggable="false">' +
                 (item.video ? '<span class="work-play-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' : "") +
                 "</div>" +
                 '<figcaption class="work-caption">' +
-                '<h3>' + item.title + "</h3>" +
-                '<span class="work-chip">' + item.type + "</span>" +
+                "<h3>" + item.title + "</h3>" +
+                '<span class="work-badges">' +
+                (item.addTag ? badge(item.addTag) : "") +
+                badge(categoryTag(item)) +
+                "</span>" +
                 "</figcaption>";
             card.addEventListener("click", function () {
                 openSnapshot(item);
             });
             grid.appendChild(card);
             revealObserver.observe(card);
+            if (window.bindTilt) window.bindTilt(card);
         });
     }
 
     var snapshot = document.getElementById("snapshot");
+    var snapshotInner = snapshot.querySelector(".snapshot-inner");
     var snapshotMedia = document.getElementById("snapshot-media");
     var snapshotTitle = document.getElementById("snapshot-title");
     var snapshotType = document.getElementById("snapshot-type");
     var snapshotDesc = document.getElementById("snapshot-desc");
     var snapshotTags = document.getElementById("snapshot-tags");
+    var snapshotGallery = document.getElementById("snapshot-gallery");
     var snapshotClose = snapshot.querySelector(".snapshot-close");
 
     var FS_ENTER =
@@ -184,14 +139,22 @@
         snapshotType.textContent = w.type;
         snapshotDesc.textContent = w.desc;
         snapshotTags.innerHTML = "";
-        (w.tags || []).forEach(function (t) {
-            var span = document.createElement("span");
-            span.className = "skill-chip";
-            span.textContent = t;
-            snapshotTags.appendChild(span);
+        var snapBadges = [];
+        if (w.addTag) snapBadges.push(badge(w.addTag));
+        snapBadges.push(badge(categoryTag(w)));
+        snapshotTags.innerHTML = snapBadges.join("");
+        snapshotGallery.innerHTML = "";
+        (w.gallery || []).forEach(function (src) {
+            var img = document.createElement("img");
+            img.src = src;
+            img.alt = w.title;
+            img.loading = "lazy";
+            img.draggable = false;
+            snapshotGallery.appendChild(img);
         });
         snapshot.classList.add("open");
         document.body.classList.add("snapshot-lock");
+        snapshotInner.scrollTop = 0;
     }
 
     function closeSnapshot() {
@@ -208,6 +171,59 @@
         if (e.code === "Escape" && snapshot.classList.contains("open")) closeSnapshot();
     });
 
-    buildFilter();
-    renderGrid("全部");
+    function initBottomNav() {
+        var nav = document.getElementById("bottom-nav");
+        if (!nav) return;
+        nav.querySelectorAll(".bnav-btn").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                if (btn.classList.contains("active")) {
+                    btn.classList.remove("active");
+                    curCat = null;
+                    renderGrid();
+                    return;
+                }
+                nav.querySelectorAll(".bnav-btn").forEach(function (b) {
+                    b.classList.remove("active");
+                });
+                btn.classList.add("active");
+                curCat = btn.getAttribute("data-cat");
+                renderGrid();
+            });
+        });
+    }
+
+    function initTagBar() {
+        var bar = document.getElementById("works-tagbar");
+        if (!bar) return;
+        bar.querySelectorAll(".tag-chip").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                if (btn.classList.contains("active")) {
+                    btn.classList.remove("active");
+                    curTag = null;
+                    renderGrid();
+                    return;
+                }
+                bar.querySelectorAll(".tag-chip").forEach(function (b) {
+                    b.classList.remove("active");
+                });
+                btn.classList.add("active");
+                curTag = btn.getAttribute("data-tag");
+                renderGrid();
+            });
+        });
+    }
+
+    initBottomNav();
+    initTagBar();
+
+    if (window.loadWorksData) {
+        window.loadWorksData(function (err, data) {
+            if (err || !data) {
+                grid.innerHTML = '<p class="section-sub">作品数据加载失败，请刷新重试。</p>';
+                return;
+            }
+            WORKS = data.works || [];
+            renderGrid();
+        });
+    }
 })();

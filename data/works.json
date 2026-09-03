@@ -1,0 +1,82 @@
+{
+    "_readme": {
+        "说明": "这是全站的作品数据文件：加作品、改文字、换图、调标签，只改这个文件，不用碰任何代码。",
+        "加一个作品": "复制一个 { } 包裹的作品块，改里面的文字，注意引号和逗号要成对、别多别少。",
+        "换图片": "先把图片上传到 images/works/ 文件夹，然后把 img 的值改成 images/works/你的文件名.jpg",
+        "字段说明": {
+            "title": "作品标题",
+            "type": "类型，写「视频」会归入视频分类，其他都算图片分类",
+            "img": "封面图路径（或任意图片网址）",
+            "video": "视频地址（mp4 链接或文件路径），没有视频就整行删掉",
+            "featured": "true 表示上首页精选（false 或删掉这行 = 不精选）",
+            "addTag": "题材标签：硬表面 / 人物 / 场景（对应作品页筛选按钮）",
+            "desc": "作品详细说明，点开快照页时显示；首页卡片取第一行当简介",
+            "gallery": "快照页里的图集列表，不需要就删掉"
+        },
+        "homepage_gallery": "下面 gallery 数组 = 首页「作品图集」瀑布流的图片"
+    },
+    "works": [
+        {
+            "title": "作品一 · 标题待填",
+            "type": "视频",
+            "img": "https://picsum.photos/seed/work1/900/560",
+            "video": "https://www.w3schools.com/html/mov_bbb.mp4",
+            "featured": true,
+            "addTag": "硬表面",
+            "desc": "这件作品的视频和说明还没放进来，先占个位。素材整理好后，把标题、封面、视频和这段文字都换成真实的就行。",
+            "gallery": [
+                "https://picsum.photos/seed/work1a/800/600",
+                "https://picsum.photos/seed/work1b/800/600",
+                "https://picsum.photos/seed/work1c/800/600",
+                "https://picsum.photos/seed/work1d/800/600"
+            ]
+        },
+        {
+            "title": "作品二 · 标题待填",
+            "type": "图片",
+            "img": "https://picsum.photos/seed/work2/900/560",
+            "featured": true,
+            "addTag": "场景",
+            "desc": "这里写这件作品的说明：创作背景、做了什么、用什么做的。现在先占位，素材好了随时替换。"
+        },
+        {
+            "title": "作品三 · 标题待填",
+            "type": "图片",
+            "img": "https://picsum.photos/seed/work3/900/560",
+            "featured": true,
+            "addTag": "人物",
+            "desc": "这里写这件作品的说明：创作背景、做了什么、用了什么工具。现在先占位，素材好了随时替换。"
+        },
+        {
+            "title": "作品四 · 标题待填",
+            "type": "交互",
+            "img": "https://picsum.photos/seed/work4/900/560",
+            "addTag": "人物",
+            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
+        },
+        {
+            "title": "作品五 · 标题待填",
+            "type": "设计",
+            "img": "https://picsum.photos/seed/work5/900/560",
+            "addTag": "场景",
+            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
+        },
+        {
+            "title": "作品六 · 标题待填",
+            "type": "视频",
+            "img": "https://picsum.photos/seed/work6/900/560",
+            "addTag": "硬表面",
+            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
+        }
+    ],
+    "gallery": [
+        "https://picsum.photos/seed/g1/600/800",
+        "https://picsum.photos/seed/g2/600/450",
+        "https://picsum.photos/seed/g3/600/900",
+        "https://picsum.photos/seed/g4/600/500",
+        "https://picsum.photos/seed/g5/600/750",
+        "https://picsum.photos/seed/g6/600/420",
+        "https://picsum.photos/seed/g7/600/850",
+        "https://picsum.photos/seed/g8/600/480"
+    ]
+}
