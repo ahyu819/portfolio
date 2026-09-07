@@ -86,6 +86,16 @@
     var FS_EXIT =
         '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
     var fsIconBtn = null;
+    var modelApi = null;
+    var currentVideo = null;
+
+    function disposeViewer() {
+        if (modelApi) {
+            modelApi.dispose();
+            modelApi = null;
+        }
+        currentVideo = null;
+    }
 
     document.addEventListener("fullscreenchange", function () {
         if (fsIconBtn) {
@@ -93,8 +103,72 @@
         }
     });
 
+    function buildTabs(w, mediaNode, modelNode) {
+        var tabs = document.createElement("div");
+        tabs.className = "snapshot-tabs";
+        var mediaLabel = w.video ? "视频" : "图片";
+        var bMedia = document.createElement("button");
+        bMedia.type = "button";
+        bMedia.className = "snapshot-tab active";
+        bMedia.textContent = mediaLabel;
+        var bModel = document.createElement("button");
+        bModel.type = "button";
+        bModel.className = "snapshot-tab";
+        bModel.textContent = "3D 模型";
+        tabs.appendChild(bMedia);
+        tabs.appendChild(bModel);
+
+        function activate(showModel) {
+            bMedia.classList.toggle("active", !showModel);
+            bModel.classList.toggle("active", showModel);
+            mediaNode.classList.toggle("is-hidden", showModel);
+            modelNode.classList.toggle("is-hidden", !showModel);
+            if (currentVideo) {
+                if (showModel) currentVideo.pause();
+            }
+            if (modelApi) modelApi.setPaused(!showModel);
+        }
+
+        bMedia.addEventListener("click", function () { activate(false); });
+        bModel.addEventListener("click", function () {
+            if (!modelNode.dataset.built) {
+                modelNode.dataset.built = "1";
+                var inner = document.createElement("div");
+                inner.className = "snapshot-model-inner";
+                modelNode.appendChild(inner);
+                var loadingTip = modelNode.querySelector(".model-loading");
+                if (loadingTip) inner.appendChild(loadingTip);
+                if (window.ModelViewer) {
+                    modelApi = window.ModelViewer.create(inner, w.model, {
+                        onProgress: function (p) {
+                            if (!loadingTip) return;
+                            if (p >= 1) {
+                                loadingTip.remove();
+                            } else if (p < 0) {
+                                loadingTip.textContent = "模型加载失败，请检查文件路径";
+                            } else {
+                                loadingTip.textContent = "模型加载中 " + Math.round(p * 100) + "%";
+                            }
+                        }
+                    });
+                } else {
+                    loadingTip.textContent = "模型组件未加载";
+                }
+            }
+            activate(true);
+        });
+        return tabs;
+    }
+
     function openSnapshot(w) {
+        disposeViewer();
         snapshotMedia.innerHTML = "";
+        fsIconBtn = null;
+        currentVideo = null;
+
+        var mediaNode = document.createElement("div");
+        mediaNode.className = "snapshot-media-node";
+
         if (w.video) {
             var wrap = document.createElement("div");
             wrap.className = "work-media snapshot-video";
@@ -113,8 +187,9 @@
                 "</div>" +
                 '<button class="vp-fullscreen" type="button" aria-label="全屏"></button>' +
                 "</div></div>";
-            snapshotMedia.appendChild(wrap);
+            mediaNode.appendChild(wrap);
             if (window.initVideoPlayer) window.initVideoPlayer(wrap);
+            currentVideo = wrap.querySelector("video");
         } else {
             var iwrap = document.createElement("div");
             iwrap.className = "snapshot-imgwrap";
@@ -132,9 +207,30 @@
             });
             iwrap.appendChild(img);
             iwrap.appendChild(fsBtn);
-            snapshotMedia.appendChild(iwrap);
+            mediaNode.appendChild(iwrap);
             fsIconBtn = fsBtn;
         }
+
+        var stack = document.createElement("div");
+        stack.className = "snapshot-media-stack";
+        var stage = document.createElement("div");
+        stage.className = "snapshot-stage";
+        stack.appendChild(stage);
+        stage.appendChild(mediaNode);
+
+        var hasModel = !!w.model;
+        if (hasModel) {
+            var modelNode = document.createElement("div");
+            modelNode.className = "snapshot-model is-hidden";
+            var tip = document.createElement("div");
+            tip.className = "model-loading";
+            tip.textContent = "模型加载中 0%";
+            modelNode.appendChild(tip);
+            stage.appendChild(modelNode);
+            stack.appendChild(buildTabs(w, mediaNode, modelNode));
+        }
+
+        snapshotMedia.appendChild(stack);
         snapshotTitle.textContent = w.title;
         snapshotType.textContent = w.type;
         snapshotDesc.textContent = w.desc;
@@ -160,6 +256,7 @@
     function closeSnapshot() {
         snapshot.classList.remove("open");
         document.body.classList.remove("snapshot-lock");
+        disposeViewer();
         snapshotMedia.innerHTML = "";
     }
 

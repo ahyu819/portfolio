@@ -11,6 +11,7 @@
             "featured": "true 表示上首页精选（false 或删掉这行 = 不精选）",
             "addTag": "题材标签：硬表面 / 人物 / 场景（对应作品页筛选按钮）",
             "desc": "作品详细说明，点开快照页时显示；首页卡片取第一行当简介",
+            "model": "（可选）3D 模型文件路径（models/xxx.glb），填了快照页就出现「3D 模型」切换按钮",
             "gallery": "快照页里的图集列表，不需要就删掉"
         },
         "homepage_gallery": "下面 gallery 数组 = 首页「作品图集」瀑布流的图片"
@@ -22,6 +23,7 @@
             "img": "https://picsum.photos/seed/work1/900/560",
             "video": "https://www.w3schools.com/html/mov_bbb.mp4",
             "featured": true,
+            "model": "models/lighter.glb",
             "addTag": "硬表面",
             "desc": "这件作品的视频和说明还没放进来，先占个位。素材整理好后，把标题、封面、视频和这段文字都换成真实的就行。",
             "gallery": [
