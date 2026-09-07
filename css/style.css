@@ -2568,6 +2568,19 @@ body.model-hover {
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.14);
     z-index: 6;
+    transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) {
+    .snapshot-tabs {
+        opacity: 0.3;
+    }
+
+    .snapshot-media-stack:hover .snapshot-tabs,
+    .snapshot-tabs:hover,
+    .snapshot-tabs:focus-within {
+        opacity: 1;
+    }
 }
 
 .snapshot-tab {
