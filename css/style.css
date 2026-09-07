@@ -1636,9 +1636,6 @@ html[data-theme="light"] .skill-tip::after {
 }
 
 .snapshot-media {
-    position: sticky;
-    top: 0;
-    z-index: 2;
     background: #000;
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 16px;
@@ -1724,6 +1721,7 @@ html[data-theme="light"] .skill-tip::after {
     position: absolute;
     top: 22px;
     right: 22px;
+    z-index: 1000;
     width: 44px;
     height: 44px;
     border-radius: 50%;
