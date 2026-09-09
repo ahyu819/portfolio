@@ -1722,6 +1722,8 @@ html[data-theme="light"] .skill-tip::after {
     top: 22px;
     right: 22px;
     z-index: 1000;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -2612,4 +2614,9 @@ body.model-hover {
     letter-spacing: 0.08em;
     color: var(--muted);
     pointer-events: none;
+}
+
+/* 全站按钮：去除手机端点击蓝框（tap highlight） */
+button, a, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
 }
