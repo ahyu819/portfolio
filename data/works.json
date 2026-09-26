@@ -26,7 +26,7 @@
             "addTag": "硬表面",
             "desc": "这件作品的视频和说明还没放进来，先占个位。素材整理好后，把标题、封面、视频和这段文字都换成真实的就行。",
             "gallery": [
-                "https://picsum.photos/seed/work1a/800/600",
+                "images/works/work1.jpg",
                 "https://picsum.photos/seed/work1b/800/600",
                 "https://picsum.photos/seed/work1c/800/600",
                 "https://picsum.photos/seed/work1d/800/600"
