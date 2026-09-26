@@ -1457,7 +1457,7 @@ html[data-theme="light"] .skill-tip::after {
 }
 
 #works-grid-wrap {
-    padding-bottom: 120px;
+    padding: 0 40px 120px;
 }
 
 .work-card {
