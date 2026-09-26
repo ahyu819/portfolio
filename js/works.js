@@ -103,60 +103,59 @@
         }
     });
 
-    function buildTabs(w, mediaNode, modelNode) {
+    function buildTabs(w, forms, modelNode, defaultName) {
         var tabs = document.createElement("div");
         tabs.className = "snapshot-tabs";
-        var mediaLabel = w.video ? "视频" : "图片";
-        var bMedia = document.createElement("button");
-        bMedia.type = "button";
-        bMedia.className = "snapshot-tab active";
-        bMedia.textContent = mediaLabel;
-        var bModel = document.createElement("button");
-        bModel.type = "button";
-        bModel.className = "snapshot-tab";
-        bModel.textContent = "3D 模型";
-        tabs.appendChild(bMedia);
-        tabs.appendChild(bModel);
+        var buttons = {};
+        forms.forEach(function (f) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "snapshot-tab";
+            b.textContent = f.label;
+            buttons[f.name] = b;
+            tabs.appendChild(b);
+        });
 
-        function activate(showModel) {
-            bMedia.classList.toggle("active", !showModel);
-            bModel.classList.toggle("active", showModel);
-            mediaNode.classList.toggle("is-hidden", showModel);
-            modelNode.classList.toggle("is-hidden", !showModel);
-            if (currentVideo) {
-                if (showModel) currentVideo.pause();
-            }
-            if (modelApi) modelApi.setPaused(!showModel);
+        function activate(name) {
+            forms.forEach(function (f) {
+                var on = f.name === name;
+                buttons[f.name].classList.toggle("active", on);
+                f.node.classList.toggle("is-hidden", !on);
+            });
+            if (currentVideo && name !== "video") currentVideo.pause();
+            if (modelApi) modelApi.setPaused(name !== "model");
         }
 
-        bMedia.addEventListener("click", function () { activate(false); });
-        bModel.addEventListener("click", function () {
-            if (!modelNode.dataset.built) {
-                modelNode.dataset.built = "1";
-                var inner = document.createElement("div");
-                inner.className = "snapshot-model-inner";
-                modelNode.appendChild(inner);
-                var loadingTip = modelNode.querySelector(".model-loading");
-                if (loadingTip) inner.appendChild(loadingTip);
-                if (window.ModelViewer) {
-                    modelApi = window.ModelViewer.create(inner, w.model, {
-                        onProgress: function (p) {
-                            if (!loadingTip) return;
-                            if (p >= 1) {
-                                loadingTip.remove();
-                            } else if (p < 0) {
-                                loadingTip.textContent = "模型加载失败，请检查文件路径";
-                            } else {
-                                loadingTip.textContent = "模型加载中 " + Math.round(p * 100) + "%";
+        forms.forEach(function (f) {
+            buttons[f.name].addEventListener("click", function () {
+                if (f.name === "model" && !modelNode.dataset.built) {
+                    modelNode.dataset.built = "1";
+                    var inner = document.createElement("div");
+                    inner.className = "snapshot-model-inner";
+                    modelNode.appendChild(inner);
+                    var loadingTip = modelNode.querySelector(".model-loading");
+                    if (loadingTip) inner.appendChild(loadingTip);
+                    if (window.ModelViewer) {
+                        modelApi = window.ModelViewer.create(inner, w.model, {
+                            onProgress: function (p) {
+                                if (!loadingTip) return;
+                                if (p >= 1) {
+                                    loadingTip.remove();
+                                } else if (p < 0) {
+                                    loadingTip.textContent = "模型加载失败，请检查文件路径";
+                                } else {
+                                    loadingTip.textContent = "模型加载中 " + Math.round(p * 100) + "%";
+                                }
                             }
-                        }
-                    });
-                } else {
-                    loadingTip.textContent = "模型组件未加载";
+                        });
+                    } else {
+                        loadingTip.textContent = "模型组件未加载";
+                    }
                 }
-            }
-            activate(true);
+                activate(f.name);
+            });
         });
+        activate(defaultName);
         return tabs;
     }
 
@@ -166,8 +165,35 @@
         fsIconBtn = null;
         currentVideo = null;
 
-        var mediaNode = document.createElement("div");
-        mediaNode.className = "snapshot-media-node";
+        var forms = [];
+
+        var stack = document.createElement("div");
+        stack.className = "snapshot-media-stack";
+        var stage = document.createElement("div");
+        stage.className = "snapshot-stage";
+        stack.appendChild(stage);
+
+        if (w.img) {
+            var iwrap = document.createElement("div");
+            iwrap.className = "snapshot-imgwrap";
+            var img = document.createElement("img");
+            img.src = w.img;
+            img.alt = w.title;
+            img.draggable = false;
+            var fsBtn = document.createElement("button");
+            fsBtn.type = "button";
+            fsBtn.className = "vp-fullscreen snapshot-fs";
+            fsBtn.setAttribute("aria-label", "全屏");
+            fsBtn.innerHTML = FS_ENTER;
+            fsBtn.addEventListener("click", function () {
+                if (window.toggleFullscreen) window.toggleFullscreen(iwrap);
+            });
+            iwrap.appendChild(img);
+            iwrap.appendChild(fsBtn);
+            stage.appendChild(iwrap);
+            fsIconBtn = fsBtn;
+            forms.push({ name: "img", label: "图片", node: iwrap });
+        }
 
         if (w.video) {
             var wrap = document.createElement("div");
@@ -187,36 +213,14 @@
                 "</div>" +
                 '<button class="vp-fullscreen" type="button" aria-label="全屏"></button>' +
                 "</div></div>";
-            mediaNode.appendChild(wrap);
+            stage.appendChild(wrap);
             if (window.initVideoPlayer) window.initVideoPlayer(wrap);
             currentVideo = wrap.querySelector("video");
-        } else {
-            var iwrap = document.createElement("div");
-            iwrap.className = "snapshot-imgwrap";
-            var img = document.createElement("img");
-            img.src = w.img;
-            img.alt = w.title;
-            img.draggable = false;
-            var fsBtn = document.createElement("button");
-            fsBtn.type = "button";
-            fsBtn.className = "vp-fullscreen snapshot-fs";
-            fsBtn.setAttribute("aria-label", "全屏");
-            fsBtn.innerHTML = FS_ENTER;
-            fsBtn.addEventListener("click", function () {
-                if (window.toggleFullscreen) window.toggleFullscreen(iwrap);
-            });
-            iwrap.appendChild(img);
-            iwrap.appendChild(fsBtn);
-            mediaNode.appendChild(iwrap);
-            fsIconBtn = fsBtn;
+            forms.push({ name: "video", label: "视频", node: wrap });
         }
 
-        var stack = document.createElement("div");
-        stack.className = "snapshot-media-stack";
-        var stage = document.createElement("div");
-        stage.className = "snapshot-stage";
-        stack.appendChild(stage);
-        stage.appendChild(mediaNode);
+        var defaultName = forms.length ? forms[0].name : null;
+        if (w.img && w.video) defaultName = (w.type === "视频") ? "video" : "img";
 
         var hasModel = !!w.model;
         if (hasModel) {
@@ -227,7 +231,8 @@
             tip.textContent = "模型加载中 0%";
             modelNode.appendChild(tip);
             stage.appendChild(modelNode);
-            stack.appendChild(buildTabs(w, mediaNode, modelNode));
+            forms.push({ name: "model", label: "3D 模型", node: modelNode });
+            stack.appendChild(buildTabs(w, forms, modelNode, defaultName));
         }
 
         snapshotMedia.appendChild(stack);
