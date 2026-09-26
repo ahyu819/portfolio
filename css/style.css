@@ -1024,6 +1024,16 @@ html[data-theme="light"] .tag-chip.active {
     color: var(--muted);
     letter-spacing: 0.06em;
     white-space: nowrap;
+    padding: 6px 14px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    transition: border-color 0.35s ease;
+}
+
+@media (hover: hover) {
+    .tagbar-hint:hover {
+        border-color: var(--accent);
+    }
 }
 
 .page-hero p {
