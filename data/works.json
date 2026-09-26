@@ -19,9 +19,8 @@
     "works": [
         {
             "title": "作品一 · 标题待填",
-            "type": "视频",
-            "img": "https://picsum.photos/seed/work1/900/560",
-            "video": "https://www.w3schools.com/html/mov_bbb.mp4",
+            "type": "图片",
+            "img": "images/works/work1.jpg",
             "featured": true,
             "model": "models/lighter.glb",
             "addTag": "硬表面",
