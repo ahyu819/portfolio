@@ -32,43 +32,6 @@
                 "https://picsum.photos/seed/work1c/800/600",
                 "https://picsum.photos/seed/work1d/800/600"
             ]
-        },
-        {
-            "title": "作品二 · 标题待填",
-            "type": "图片",
-            "img": "https://picsum.photos/seed/work2/900/560",
-            "featured": true,
-            "addTag": "场景",
-            "desc": "这里写这件作品的说明：创作背景、做了什么、用什么做的。现在先占位，素材好了随时替换。"
-        },
-        {
-            "title": "作品三 · 标题待填",
-            "type": "图片",
-            "img": "https://picsum.photos/seed/work3/900/560",
-            "featured": true,
-            "addTag": "人物",
-            "desc": "这里写这件作品的说明：创作背景、做了什么、用了什么工具。现在先占位，素材好了随时替换。"
-        },
-        {
-            "title": "作品四 · 标题待填",
-            "type": "交互",
-            "img": "https://picsum.photos/seed/work4/900/560",
-            "addTag": "人物",
-            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
-        },
-        {
-            "title": "作品五 · 标题待填",
-            "type": "设计",
-            "img": "https://picsum.photos/seed/work5/900/560",
-            "addTag": "场景",
-            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
-        },
-        {
-            "title": "作品六 · 标题待填",
-            "type": "视频",
-            "img": "https://picsum.photos/seed/work6/900/560",
-            "addTag": "硬表面",
-            "desc": "这里写这件作品的说明。现在先占位，素材好了随时替换。"
         }
     ],
     "gallery": [
