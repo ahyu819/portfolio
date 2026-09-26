@@ -394,3 +394,33 @@
 - [ ] 真实 Logo 替换（目前仍为渐变圆环 + 字母 A）
 - [ ] lighter.glb 模型朝向确认
 - [ ] 部署上线（里程碑 6）
+
+---
+
+### 本次改动（会话 7：快照页 3D 模型切换 + 交互细节 + 交接文档）
+
+#### A. 快照页「图片/视频 ↔ 3D 模型」切换（用户需求：部分作品展示可旋转模型）
+1. **数据驱动**：`data/works.json` 新增可选字段 `model`（填 `models/xxx.glb` 即出现切换按钮，不填则页面照旧）；`_readme` 已补说明——用户加作品只填一行路径，无需改代码
+2. **新增 `js/model-viewer.js`（v=1，ES 模块）**：可复用 3D 模型查看器——GLTF 加载 + 自动居中缩放（fit）+ RoomEnvironment 环境反射 + 灯光 + 拖拽旋转（带惯性）+ 空闲缓慢自转 + 双击复位 + 进度回调 + `dispose()` 资源释放 + `setPaused()` 暂停渲染
+3. **`js/works.js`（v=14）**：快照页媒体区支持双形态——顶部玻璃胶囊切换按钮（`视频/图片` | `3D 模型`，仅当作品有 model 字段时出现）；模型**懒加载**（首次点「3D 模型」才加载 GLB，显示百分比进度）；切换时视频暂停、模型转角保留；关闭快照释放模型资源
+4. **`works.html`**：importmap 补本地 three（`./js/vendor/three/...`）+ 挂载 model-viewer.js
+5. **CSS**：`.snapshot-tabs/.snapshot-tab/.snapshot-model/.model-loading/.is-hidden` 等（style.css v=49）
+
+#### B. 交互细节修正（用户逐条反馈）
+1. **切换按钮鼠标移开变半透明**（opacity 0.3，hover 恢复 1；仅鼠标设备，触屏保持清晰）——不遮挡原图（v=50）
+2. **取消媒体吸顶**：`.snapshot-media` 去掉 position:sticky，作品/模型随页面正常滚动（v=51）
+3. **关闭按钮置顶**：`.snapshot-close` z-index:1000，手机端不再被媒体/切换按钮覆盖（v=51）
+4. **去除手机端点击蓝框**：全站按钮/链接 `-webkit-tap-highlight-color: transparent` + 关闭按钮 outline:none（v=52）
+
+#### C. 协作与文档
+1. **本地预览服务器脚本曾因系统清理 `%temp%` 丢失**，已重建；**脚本代码内置到 AGENTS.md**，换环境/换工具都能照抄重建（用户明确要求脚本不放进仓库）
+2. **新增 `AGENTS.md`**：跨工具协作规范（项目速览 / 预览方法 / 硬性约定：版本号·UTF-8编码禁忌·works.json 单一数据源·禁止境外CDN·大模型不提交·每步 commit / 文案口径 / 关键文件表）
+3. 本会话提交：13cc69f（模型切换）、12fd697（按钮半透明）、07804b9（取消吸顶+置顶）、bb89869（去蓝框）、5569aa0（撤销 tools 方案）
+
+### 待办（下次对话继续）
+- [ ] works 页文案确认（页首副标题等）
+- [ ] 作品素材慢慢补 → data/works.json（含轻量 GLB，建议 5MB 内）
+- [ ] 主页 hero 模型是否加同款拖拽旋转（待定）
+- [ ] 真实 Logo 替换（目前仍为渐变圆环 + 字母 A）
+- [ ] lighter.glb 模型朝向确认
+- [ ] 部署上线（里程碑 6）
