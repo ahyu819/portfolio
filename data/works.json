@@ -15,7 +15,7 @@
             "gallery": "快照页里的图集列表，不需要就删掉",
             "textures": "（可选）贴图拆解卡组：数组，每项 { \"img\": 图片路径, \"name\": 名称 }，快照页说明下方会出现扑克牌展开式的贴图展示，不需要就删掉"
         },
-        "homepage_gallery": "首页「作品图集」= 自动抽取未精选作品的封面主图 + 下面 gallery 数组里的手动追加图（真实比例展示、点击放大）"
+        "homepage_gallery": "首页「作品图集」= 自动抽取未精选作品的封面主图（真实比例展示、点击放大），不用维护列表"
     },
     "works": [
         {
@@ -93,11 +93,27 @@
                 "images/works/sea-shot.jpg",
                 "images/works/sea-white.jpg"
             ]
+        },
+        {
+            "title": "电梯之梦",
+            "type": "图片",
+            "img": "images/works/gallery-elevator.jpg",
+            "addTag": "场景",
+            "desc": ""
+        },
+        {
+            "title": "搁浅鲸鱼",
+            "type": "图片",
+            "img": "images/works/gallery-whale.jpg",
+            "addTag": "场景",
+            "desc": ""
+        },
+        {
+            "title": "传送门",
+            "type": "图片",
+            "img": "images/works/gallery-portal.jpg",
+            "addTag": "场景",
+            "desc": ""
         }
-    ],
-    "gallery": [
-        "images/works/gallery-elevator.jpg",
-        "images/works/gallery-whale.jpg",
-        "images/works/gallery-portal.jpg"
     ]
 }
