@@ -46,6 +46,7 @@
             "featured": true,
             "model": "models/aodike-opt.glb",
             "addTag": "硬表面",
+            "desc": "游戏Warframe内的一把枪。\nBlender 建模渲染，机身刻痕遮罩图用 Photoshop 制作，Substance Painter 绘制材质。",
             "textures": [
                 { "img": "images/works/gun-tex-white.jpg" },
                 { "img": "images/works/gun-tex-basecolor.jpg", "name": "Basecolor" },
