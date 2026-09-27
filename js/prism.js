@@ -3,6 +3,11 @@ import { Renderer, Triangle, Program, Mesh } from "ogl";
 (function () {
     /* 手机端恢复背景：dpr 锁 1 + 保留绘制缓冲 + 忽略地址栏伸缩的小幅尺寸变化，避免滚动闪烁 */
     var isMobile = window.innerWidth <= 700;
+    var isWorks = !!document.getElementById("works-grid");
+    var isHome = !!document.getElementById("hero");
+    /* 棱镜使用范围：works 页（双端）；index 页仅手机端（桌面 index 用光线+波浪双背景） */
+    if (!isWorks && !isHome) return;
+    if (!isMobile && !isWorks) return;
     var container = document.createElement("div");
     container.className = "prism-container";
     document.body.appendChild(container);
