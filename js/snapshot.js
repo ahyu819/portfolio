@@ -8,12 +8,6 @@
     var snapshotGallery = document.getElementById("snapshot-gallery");
     var snapshotClose = snapshot.querySelector(".snapshot-close");
 
-    var FS_ENTER =
-        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
-    var FS_EXIT =
-        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
-    var fsIconBtn = null;
-    var modelFsBtn = null;
     var modelApi = null;
     var currentVideo = null;
 
@@ -23,19 +17,7 @@
             modelApi = null;
         }
         currentVideo = null;
-        modelFsBtn = null;
     }
-
-    function syncFsIcons() {
-        var fs = !!document.querySelector(".pseudo-fs");
-        if (fsIconBtn) {
-            fsIconBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
-        }
-        if (modelFsBtn) {
-            modelFsBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
-        }
-    }
-    document.addEventListener("pseudofschange", syncFsIcons);
 
     /* 说明文字渲染：冒号前导语单独成行，软件名高亮 */
     var SOFTWARE_NAMES = ["Blender", "Photoshop", "Substance Painter", "ZBrush", "Illustrator", "After Effects"];
@@ -177,7 +159,6 @@
     function openSnapshot(w) {
         disposeViewer();
         snapshotMedia.innerHTML = "";
-        fsIconBtn = null;
         currentVideo = null;
 
         var forms = [];
@@ -195,19 +176,8 @@
             img.src = w.img;
             img.alt = w.title;
             img.draggable = false;
-            var fsBtn = document.createElement("button");
-            fsBtn.type = "button";
-            fsBtn.className = "vp-fullscreen snapshot-fs";
-            fsBtn.setAttribute("aria-label", "全屏");
-            fsBtn.innerHTML = FS_ENTER;
-            fsBtn.addEventListener("click", function () {
-                if (window.toggleFullscreen) window.toggleFullscreen(iwrap);
-                syncFsIcons();
-            });
             iwrap.appendChild(img);
-            iwrap.appendChild(fsBtn);
             stage.appendChild(iwrap);
-            fsIconBtn = fsBtn;
             forms.push({ name: "img", label: "图片", node: iwrap });
         }
 
@@ -227,11 +197,9 @@
                 '<button class="vp-volume-btn" type="button" aria-label="音量"></button>' +
                 '<div class="vp-volume-panel"><div class="vp-vol-slider"><div class="vp-vol-fill"></div><div class="vp-vol-handle"></div></div></div>' +
                 "</div>" +
-                '<button class="vp-fullscreen" type="button" aria-label="全屏"></button>' +
                 "</div></div>";
             stage.appendChild(wrap);
-            if (window.initVideoPlayer) window.initVideoPlayer(wrap);
-            currentVideo = wrap.querySelector("video");
+            if (window.initVideoPlayer) window.initVideoPlayer(wrap);            currentVideo = wrap.querySelector("video");
             forms.push({ name: "video", label: "视频", node: wrap });
         }
 
@@ -246,17 +214,6 @@
             tip.className = "model-loading";
             tip.textContent = "模型加载中 0%";
             modelNode.appendChild(tip);
-            var modelFs = document.createElement("button");
-            modelFs.type = "button";
-            modelFs.className = "vp-fullscreen snapshot-fs";
-            modelFs.setAttribute("aria-label", "全屏");
-            modelFs.innerHTML = FS_ENTER;
-            modelFs.addEventListener("click", function () {
-                if (window.toggleFullscreen) window.toggleFullscreen(modelNode);
-                syncFsIcons();
-            });
-            modelNode.appendChild(modelFs);
-            modelFsBtn = modelFs;
             stage.appendChild(modelNode);
             forms.push({ name: "model", label: "3D 模型", node: modelNode });
             stack.appendChild(buildTabs(w, forms, modelNode, defaultName));
@@ -299,14 +256,7 @@
         if (e.target === snapshot) closeSnapshot();
     });
     document.addEventListener("keydown", function (e) {
-        if (e.code !== "Escape") return;
-        var pseudo = document.querySelector(".pseudo-fs");
-        if (pseudo) {
-            if (window.toggleFullscreen) window.toggleFullscreen(pseudo);
-            syncFsIcons();
-            return;
-        }
-        if (snapshot.classList.contains("open")) closeSnapshot();
+        if (e.code === "Escape" && snapshot.classList.contains("open")) closeSnapshot();
     });
     window.openWorkSnapshot = openSnapshot;
 })();
