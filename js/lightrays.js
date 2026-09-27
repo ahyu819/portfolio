@@ -1,6 +1,7 @@
 import { Renderer, Program, Triangle, Mesh } from "ogl";
 
 (function () {
+    if (window.innerWidth <= 700) return; /* 手机端禁用 WebGL 背景，CSS 渐变兜底 */
     var container = document.createElement("div");
     container.className = "light-rays-container";
     document.body.appendChild(container);

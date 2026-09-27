@@ -5,6 +5,8 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 (function () {
     var container = document.getElementById("scene3d");
     if (!container) return;
+    /* 手机端不初始化 3D 场景：省下 68MB 模型下载与整条 WebGL 渲染管线，hero 仅保留文字与 CSS 背景 */
+    if (window.innerWidth <= 700) return;
 
     /* ================== 模型配置：换模型只改这里 ================== */
     // url: models/ 文件夹里的 .glb 文件（列表顺序 = 点击切换的循环顺序）

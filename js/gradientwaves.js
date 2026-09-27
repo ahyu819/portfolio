@@ -1,6 +1,7 @@
 import { Renderer, Program, Mesh, Triangle } from "ogl";
 
 (function () {
+    if (window.innerWidth <= 700) return; /* 手机端禁用 WebGL 背景（raymarch 开销大），CSS 渐变兜底 */
     var container = document.createElement("div");
     container.className = "gradient-waves-container";
     document.body.appendChild(container);

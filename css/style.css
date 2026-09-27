@@ -2663,6 +2663,53 @@ button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* ===== 手机端（≤700px）性能与布局修正 ===== */
+@media (max-width: 700px) {
+    /* 导航收拢：隐藏四个锚点链接，保留 logo + 全部作品 + 关于作者 */
+    .nav-link,
+    .nav-divider {
+        display: none;
+    }
+
+    /* 快照切换胶囊：文字禁止竖排换行，缩小占位 */
+    .snapshot-tab {
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* hero 文字给右下角 FAB 让位 */
+    .page-hero,
+    #hero .hero-inner {
+        padding-right: 76px;
+    }
+
+    /* 手机隐藏 NEXT 按钮（3D 场景在手机端不加载） */
+    .model-next-btn {
+        display: none;
+    }
+
+    /* 作品网格边距收窄 */
+    #works-grid-wrap {
+        padding: 0 16px 90px;
+    }
+
+    /* FAB 组缩小 */
+    .fab-btn {
+        width: 52px;
+        height: 52px;
+        right: 18px;
+        bottom: 18px;
+    }
+
+    .fab-theme-btn {
+        width: 48px;
+        height: 48px;
+        right: 20px;
+        bottom: 82px;
+    }
+}
+
 /* ===== 快照页：贴图拆解（手风琴画廊） ===== */
 .snapshot-textures {
     margin-top: 36px;
