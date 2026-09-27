@@ -33,7 +33,7 @@
                 { "img": "images/works/tex-normal.jpg", "name": "Normal" },
                 { "img": "images/works/tex-roughness.jpg", "name": "Roughness" }
             ],
-            "desc": "打火机复刻：Blender 建模渲染，机身刻痕遮罩图用 Photoshop 制作，Substance Painter 绘制材质。",
+            "desc": "这是对我有特别意义的打火机，因此我打算复刻他。\nBlender 建模渲染，机身刻痕遮罩图用 Photoshop 制作，Substance Painter 绘制材质。",
             "gallery": [
                 "images/works/shot-01.jpg",
                 "images/works/work1.jpg"

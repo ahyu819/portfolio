@@ -102,6 +102,7 @@
 
     function renderDesc(el, text) {
         var esc = String(text || "")
+            .replace(/\r/g, "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
@@ -110,10 +111,21 @@
                 return '<span class="desc-sw">' + m + "</span>";
             });
         });
-        var idx = esc.indexOf("：");
-        if (idx > -1 && idx <= 12) {
-            el.innerHTML =
-                '<span class="desc-lead">' + esc.slice(0, idx) + "</span>" + esc.slice(idx + 1);
+        var lead = null;
+        var rest = null;
+        var ci = esc.indexOf("：");
+        if (ci > -1 && ci <= 12) {
+            lead = esc.slice(0, ci);
+            rest = esc.slice(ci + 1).replace(/^\s+/, "");
+        } else {
+            var pi = esc.indexOf("。");
+            if (pi > -1 && pi <= 30 && pi < esc.length - 1) {
+                lead = esc.slice(0, pi + 1);
+                rest = esc.slice(pi + 1).replace(/^\s+/, "");
+            }
+        }
+        if (lead !== null) {
+            el.innerHTML = '<span class="desc-lead">' + lead + "</span>" + rest;
         } else {
             el.innerHTML = esc;
         }
