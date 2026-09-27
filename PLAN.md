@@ -170,7 +170,7 @@
 - 里程碑 2（首页骨架 HTML）：✅ 已完成（2026-08-06）—— 首页含导航、自我介绍、页脚，本地显示正常
 - 里程碑 3（CSS 美化）：✅ 已完成（2026-08-06）—— 深色现代风上线，导航半透明毛玻璃、渐变标题、手机适配
 - 风格方向：已选定参考 dark-portfolio-template（2026-08-06，深色高端创意风）
-- 当前里程碑：里程碑 5（内容充填）——进行中
+- 当前里程碑：里程碑 6（部署上线）——✅ 已完成（2026-09-28，会话 8）
 - 里程碑 4 后期增强（2026-08-31）：hero 悬停位移 + 主页 3D 模型系统（GLB 加载/点击切换/自定义光标，详见开发记录会话 4）
 - 里程碑 4 定稿（2026-09-02）：布局与交互多轮增强后验收通过，转入里程碑 5
 - 里程碑 5 阶段成果（2026-09-02）：作品数据地基 works.json（首页精选/图集/全部作品页统一读数据，不写代码即可加作品）、About 页改版（去掉简历式经历板块，纯文字简介 + 软件技能）、联系方式填入（邮箱 2827290813@qq.com / 微信 zhenhaoya500）、全站称呼统一 Ahyu
@@ -424,3 +424,44 @@
 - [ ] 真实 Logo 替换（目前仍为渐变圆环 + 字母 A）
 - [ ] lighter.glb 模型朝向确认
 - [ ] 部署上线（里程碑 6）
+
+---
+
+### 本次改动（会话 8：内容真实化 + 交互统一 + 里程碑 6 部署上线）
+
+#### A. 作品内容真实化（全部以 data/works.json 单一数据源驱动）
+1. **秋水含睛**（原作品一）：封面=打火机主图（2560² 21MB→2048px 274KB）、内嵌视频 videos/qiushuihanjing.mp4（21.7MB，moov 在头部可边下边播）、说明定稿「这是对我有特别意义的打火机，因此我打算复刻他。Blender 建模渲染，机身刻痕遮罩图用 Photoshop 制作，Substance Painter 绘制材质。」、图集含手属实拍（EXIF 转正压缩）
+2. **奥堤克光子枪**（新，精选）：主图+2 张相似图入图集、贴图拆解 6 张（白膜默认展开无名称 + Basecolor/Metallic/Normal/Roughness/Emission）、3D 模型 = models/aodike-opt.glb（与主页共用）、说明 = Warframe 起缘句
+3. **水冷散热器 / 六号线 / 蔚蓝之海 / 电梯之梦 / 搁浅鲸鱼 / 传送门**（均非精选）：封面+图集按需求分布，说明文字按用户口径逐个定稿
+4. RGBA 转 JPG 统一垫深色底（#0b0d10）防透明变黑；实拍图按 EXIF 转正；脚本中文路径会 GBK 乱码——**一律先复制 ASCII 临时名再处理**
+
+#### B. 快照页功能升级
+1. **媒体区三形态**：图片/视频/3D 模型按数据自动生成切换按钮（works.js 改造，后抽出），默认形态跟 type 字段走
+2. **贴图拆解板块（手风琴画廊）**：works.json 新增 textures 字段；参考 reactbits AccordionGallery——等高竖条、选中展开 52%、未选中灰度（后按用户要求取消灰度保原色）、标签竖线强调
+3. **3D 模型查看器提亮**（model-viewer.js）：曝光 1.25、环境反射 0.9、三灯加强；**新增全屏按钮**（.snapshot-fs 需 z-index:7 压过画布，否则被透明 canvas 遮挡点击）
+4. 删除了类型胶囊、题材标签行、贴图提示小字
+
+#### C. 首页交互统一
+1. **精选卡片点击 = 就地展开快照详情**（不跳转）：快照逻辑从 works.js 抽成 **js/snapshot.js** 两页共用（index.html 补快照 DOM + model-viewer 模块）；works.html#work-序号 深链保留
+2. **移除首页内嵌播放器**：视频卡显示封面图+播放角标（video 加 poster 属性实现）；bindTilt 兼容 video 元素，悬停弹性两卡一致
+3. **作品图集**：改为自动抽取非精选作品封面（真实比例瀑布流+点击放大）+ works.json gallery 数组手动追加图；picsum 占位清零
+4. **主页模型每 10 秒自动轮换**（scene3d.js AUTO_SWITCH_MS）：hero 可见且页面前台才切，手动切换重置计时
+5. FAB 深浅色按钮移到悬浮加号正上方常驻，放大为 58px 同款玻璃皮肤；加号旋转改为仅图标转、阴影固定
+
+#### D. 里程碑 6 ✅ 部署上线（2026-09-28）
+1. 仓库：https://github.com/ahyu819/portfolio（public）+ .nojekyll
+2. 网址：**https://ahyu819.github.io/portfolio/**
+3. 部署方式：gh CLI 设备码授权（OAuth device flow 手动轮询实现）→ API 建仓 → git push（**需走用户本地代理 127.0.0.1:7897，已配置在仓库本地 http.proxy**）→ Pages API 开启
+4. 推送内容约 110MB（含 aodike-opt.glb 44MB / lighter.glb 23MB / 视频 21.7MB，均在 100MB 单文件限制内）
+5. 验证：首页 200、works.json 8 作品、模型 206（支持 Range，拖进度条正常）
+
+#### E. 版本号现状（下次改动从这里 +1）
+main.js v=11 / site-data.js v=6 / works.js v=24 / snapshot.js v=3 / model-viewer.js v=2 / scene3d.js v=19 / fabmenu.js v=7 / style.css v=63
+
+### 待办（下次对话继续）
+- [ ] 电梯之梦 / 搁浅鲸鱼 / 传送门 三个作品的说明文字（desc 留空，等用户给要点）
+- [ ] 主页 hero 模型手动拖拽旋转（待定）
+- [ ] 真实 Logo 替换（目前仍为渐变圆环 + 字母 A）
+- [ ] lighter.glb 模型朝向确认
+- [ ] 国内访问速度观察（github.io 时快时慢，备选：Gitee 推镜像 / Cloudflare Pages）
+- [ ] teach 用户「GitHub 网页改 works.json 加作品」流程
