@@ -2730,6 +2730,12 @@ button, a, [role="button"] {
         display: none;
     }
 
+    /* 手机端隐藏媒体放大按钮（伪全屏仅桌面端提供） */
+    .snapshot-fs,
+    .work-media .vp-fullscreen {
+        display: none;
+    }
+
     /* 作品网格边距收窄 */
     #works-grid-wrap {
         padding: 0 16px 90px;
