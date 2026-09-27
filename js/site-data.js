@@ -30,7 +30,7 @@
             renderFeatured(works.filter(function (w) { return w.featured; }));
         }
         if (galleryCols) {
-            renderGallery(data.gallery || []);
+            renderGallery(works.filter(function (w) { return !w.featured; }).map(function (w) { return w.img; }));
         }
     });
 

@@ -15,7 +15,7 @@
             "gallery": "快照页里的图集列表，不需要就删掉",
             "textures": "（可选）贴图拆解卡组：数组，每项 { \"img\": 图片路径, \"name\": 名称 }，快照页说明下方会出现扑克牌展开式的贴图展示，不需要就删掉"
         },
-        "homepage_gallery": "下面 gallery 数组 = 首页「作品图集」瀑布流的图片"
+        "homepage_gallery": "首页「作品图集」= 自动抽取未精选作品的封面主图（真实比例展示、点击放大），不用维护列表"
     },
     "works": [
         {
@@ -94,15 +94,5 @@
                 "images/works/sea-white.jpg"
             ]
         }
-    ],
-    "gallery": [
-        "https://picsum.photos/seed/g1/600/800",
-        "https://picsum.photos/seed/g2/600/450",
-        "https://picsum.photos/seed/g3/600/900",
-        "https://picsum.photos/seed/g4/600/500",
-        "https://picsum.photos/seed/g5/600/750",
-        "https://picsum.photos/seed/g6/600/420",
-        "https://picsum.photos/seed/g7/600/850",
-        "https://picsum.photos/seed/g8/600/480"
     ]
 }
