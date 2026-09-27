@@ -52,10 +52,6 @@
         '<div class="fab-prelayer off" style="background:#f4f6f8"></div>' +
         "</div>" +
         '<div class="fab-panel">' +
-        '<button class="fab-theme-btn" type="button" aria-label="切换深色/浅色模式" title="切换深色/浅色模式">' +
-        '<span class="fab-theme-sun">' + ICONS.sun + "</span>" +
-        '<span class="fab-theme-moon">' + ICONS.moon + "</span>" +
-        "</button>" +
         '<div class="fab-scroll">' +
         '<div class="fab-brand">Ahyu</div>' +
         '<nav class="fab-menu" aria-label="快捷导航">' +
@@ -98,6 +94,10 @@
         '<button class="fab-btn" id="fab-btn" type="button" aria-label="菜单">' +
         '<span class="fab-plus">' + ICONS.plus + "</span>" +
         '<span class="fab-cross">' + ICONS.cross + "</span>" +
+        "</button>" +
+        '<button class="fab-theme-btn" type="button" aria-label="切换深色/浅色模式" title="切换深色/浅色模式">' +
+        '<span class="fab-theme-sun">' + ICONS.sun + "</span>" +
+        '<span class="fab-theme-moon">' + ICONS.moon + "</span>" +
         "</button>";
     document.body.appendChild(wrap);
 

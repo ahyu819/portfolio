@@ -1978,12 +1978,13 @@ body.snapshot-lock {
     transition-delay: 0.38s;
 }
 
-/* 面板右上角：深色 / 浅色模式切换 */
+/* 悬浮「+」按钮正上方：深色 / 浅色模式切换（面板外常驻） */
 .fab-theme-btn {
     position: absolute;
-    top: 20px;
-    right: 24px;
-    z-index: 5;
+    right: 35px;
+    bottom: 96px;
+    z-index: 7;
+    pointer-events: auto;
     width: 40px;
     height: 40px;
     border-radius: 50%;
