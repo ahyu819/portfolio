@@ -30,7 +30,11 @@
             renderFeatured(works.filter(function (w) { return w.featured; }));
         }
         if (galleryCols) {
-            renderGallery(works.filter(function (w) { return !w.featured; }).map(function (w) { return w.img; }));
+            var galleryList = works
+                .filter(function (w) { return !w.featured; })
+                .map(function (w) { return w.img; })
+                .concat(data.gallery || []);
+            renderGallery(galleryList);
         }
     });
 
