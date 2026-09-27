@@ -764,7 +764,7 @@
     function bindTilt(item) {
         if (item.getAttribute("data-tilt") === "1") return;
         item.setAttribute("data-tilt", "1");
-        var img = item.querySelector("img");
+        var img = item.querySelector("img") || item.querySelector("video");
         if (!img) return;
         var c = { img: img, rx: 0, ry: 0, s: 1, tx: 0, ty: 0, ts: 1, vx: 0, vy: 0, vs: 0 };
         cards.push(c);
