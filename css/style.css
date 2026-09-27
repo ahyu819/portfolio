@@ -1194,7 +1194,7 @@ html[data-theme="light"] .skill-tip::after {
 @media (max-width: 640px) {
     .nav-logo {
         height: 30px;
-        padding: 0 16px 0 12px;
+        padding: 0 22px 0 16px;
     }
 
     header {
