@@ -216,7 +216,7 @@
 
     document.addEventListener("click", function (e) {
         var img = e.target.closest(
-            ".gallery-item img, .work-card .work-media img, .detail-card img, .snapshot-gallery img"
+            ".gallery-item img, .detail-card img, .snapshot-gallery img"
         );
         if (!img) return;
         e.preventDefault();
