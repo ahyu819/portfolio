@@ -63,7 +63,7 @@
             if (item.video) {
                 media.setAttribute("data-video", "");
                 media.innerHTML =
-                    '<video class="work-video" preload="metadata" src="' + item.video + '"></video>' +
+                    '<video class="work-video" preload="metadata" poster="' + item.img + '" src="' + item.video + '"></video>' +
                     VP_CONTROLS;
             } else {
                 var img = document.createElement("img");
