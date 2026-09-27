@@ -1,6 +1,7 @@
 import { Renderer, Triangle, Program, Mesh } from "ogl";
 
 (function () {
+    if (window.innerWidth <= 700) return; /* 手机端禁用 WebGL 背景（滚动闪烁 + GPU 发热），纯色渐变兜底 */
     var container = document.createElement("div");
     container.className = "prism-container";
     document.body.appendChild(container);

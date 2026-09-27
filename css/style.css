@@ -2665,6 +2665,45 @@ button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* ===== 快照媒体伪全屏（三端统一：iOS Safari 无元素全屏 API） ===== */
+.snapshot-imgwrap.pseudo-fs,
+.snapshot-model.pseudo-fs,
+.work-media.pseudo-fs {
+    position: fixed;
+    inset: 0;
+    z-index: 1550;
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    background: #0b0d10;
+}
+
+.snapshot-imgwrap.pseudo-fs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.snapshot-imgwrap.pseudo-fs img {
+    max-height: 100vh;
+    width: auto;
+    max-width: 100vw;
+}
+
+.snapshot-model.pseudo-fs {
+    height: 100vh;
+}
+
+.work-media.pseudo-fs {
+    aspect-ratio: auto;
+}
+
+.work-media.pseudo-fs video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 /* ===== 手机端（≤700px）性能与布局修正 ===== */
 @media (max-width: 700px) {
     /* 导航收拢：隐藏四个锚点链接，保留 logo + 全部作品 + 关于作者 */

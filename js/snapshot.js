@@ -26,15 +26,16 @@
         modelFsBtn = null;
     }
 
-    document.addEventListener("fullscreenchange", function () {
-        var fs = !!document.fullscreenElement;
+    function syncFsIcons() {
+        var fs = !!document.querySelector(".pseudo-fs");
         if (fsIconBtn) {
             fsIconBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
         }
         if (modelFsBtn) {
             modelFsBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
         }
-    });
+    }
+    document.addEventListener("pseudofschange", syncFsIcons);
 
     /* 说明文字渲染：冒号前导语单独成行，软件名高亮 */
     var SOFTWARE_NAMES = ["Blender", "Photoshop", "Substance Painter", "ZBrush", "Illustrator", "After Effects"];
@@ -201,6 +202,7 @@
             fsBtn.innerHTML = FS_ENTER;
             fsBtn.addEventListener("click", function () {
                 if (window.toggleFullscreen) window.toggleFullscreen(iwrap);
+                syncFsIcons();
             });
             iwrap.appendChild(img);
             iwrap.appendChild(fsBtn);
@@ -251,6 +253,7 @@
             modelFs.innerHTML = FS_ENTER;
             modelFs.addEventListener("click", function () {
                 if (window.toggleFullscreen) window.toggleFullscreen(modelNode);
+                syncFsIcons();
             });
             modelNode.appendChild(modelFs);
             modelFsBtn = modelFs;
@@ -296,7 +299,14 @@
         if (e.target === snapshot) closeSnapshot();
     });
     document.addEventListener("keydown", function (e) {
-        if (e.code === "Escape" && snapshot.classList.contains("open")) closeSnapshot();
+        if (e.code !== "Escape") return;
+        var pseudo = document.querySelector(".pseudo-fs");
+        if (pseudo) {
+            if (window.toggleFullscreen) window.toggleFullscreen(pseudo);
+            syncFsIcons();
+            return;
+        }
+        if (snapshot.classList.contains("open")) closeSnapshot();
     });
     window.openWorkSnapshot = openSnapshot;
 })();

@@ -234,14 +234,9 @@
     });
 
     function toggleFullscreen(el) {
-        var doc = document;
-        if (doc.fullscreenElement) {
-            doc.exitFullscreen();
-        } else if (el.requestFullscreen) {
-            el.requestFullscreen();
-        } else if (el.webkitRequestFullscreen) {
-            el.webkitRequestFullscreen();
-        }
+        /* 统一伪全屏：iOS Safari 不支持元素全屏 API，用 CSS 类铺满视口（三端一致） */
+        el.classList.toggle("pseudo-fs");
+        document.dispatchEvent(new CustomEvent("pseudofschange"));
     }
 
     window.toggleFullscreen = toggleFullscreen;
@@ -392,14 +387,17 @@
         });
 
         fsBtn.innerHTML = FS_ENTER;
+        function syncPlayerFsIcon() {
+            fsBtn.innerHTML = wrap.classList.contains("pseudo-fs") ? FS_EXIT : FS_ENTER;
+        }
         fsBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             toggleFullscreen(wrap);
+            syncPlayerFsIcon();
         });
 
-        document.addEventListener("fullscreenchange", function () {
-            fsBtn.innerHTML = document.fullscreenElement ? FS_EXIT : FS_ENTER;
-        });
+        document.addEventListener("pseudofschange", syncPlayerFsIcon);
+        syncPlayerFsIcon();
 
         document.addEventListener("keydown", function (e) {
             if (e.code !== "Space") return;
