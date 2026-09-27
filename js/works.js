@@ -186,11 +186,13 @@
             img.alt = t.name || "贴图";
             img.draggable = false;
             img.loading = "lazy";
-            var cap = document.createElement("span");
-            cap.className = "tex-name";
-            cap.textContent = t.name || "";
             panel.appendChild(img);
-            panel.appendChild(cap);
+            if (t.name) {
+                var cap = document.createElement("span");
+                cap.className = "tex-name";
+                cap.textContent = t.name;
+                panel.appendChild(cap);
+            }
             panel.addEventListener("click", function () {
                 if (panel === active) {
                     if (window.openImage) window.openImage(t.img);

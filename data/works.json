@@ -27,6 +27,7 @@
             "model": "models/lighter.glb",
             "addTag": "硬表面",
             "textures": [
+                { "img": "images/works/tex-white.jpg" },
                 { "img": "images/works/tex-basecolor.jpg", "name": "Basecolor" },
                 { "img": "images/works/tex-metallic.jpg", "name": "Metallic" },
                 { "img": "images/works/tex-normal.jpg", "name": "Normal" },
