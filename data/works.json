@@ -38,6 +38,27 @@
                 "images/works/shot-01.jpg",
                 "images/works/work1.jpg"
             ]
+        },
+        {
+            "title": "奥堤克光子枪",
+            "type": "图片",
+            "img": "images/works/gun-main.jpg",
+            "featured": true,
+            "model": "models/aodike-opt.glb",
+            "addTag": "硬表面",
+            "textures": [
+                { "img": "images/works/gun-tex-white.jpg" },
+                { "img": "images/works/gun-tex-basecolor.jpg", "name": "Basecolor" },
+                { "img": "images/works/gun-tex-metallic.jpg", "name": "Metallic" },
+                { "img": "images/works/gun-tex-normal.jpg", "name": "Normal" },
+                { "img": "images/works/gun-tex-roughness.jpg", "name": "Roughness" },
+                { "img": "images/works/gun-tex-emission.jpg", "name": "Emission" }
+            ],
+            "gallery": [
+                "images/works/gun-shot.jpg",
+                "images/works/gun-2.jpg",
+                "images/works/gun-3.jpg"
+            ]
         }
     ],
     "gallery": [
