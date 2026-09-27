@@ -179,8 +179,8 @@
         w.textures.forEach(function (t, i) {
             var panel = document.createElement("button");
             panel.type = "button";
-            panel.className = "tex-panel" + (i === 1 ? " active" : "");
-            if (i === 1) active = panel;
+            panel.className = "tex-panel" + (i === 0 ? " active" : "");
+            if (i === 0) active = panel;
             var img = document.createElement("img");
             img.src = t.img;
             img.alt = t.name || "贴图";
