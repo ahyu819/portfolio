@@ -72,6 +72,16 @@
                 "images/works/cooler-3.jpg",
                 "images/works/cooler-4.jpg"
             ]
+        },
+        {
+            "title": "六号线",
+            "type": "图片",
+            "img": "images/works/metro-main.jpg",
+            "addTag": "场景",
+            "desc": "灵感来自地铁花海，于是制作了六号线的场景。\n窗外画面为 AI 生成的图片，其余由 Blender 制作。",
+            "gallery": [
+                "images/works/metro-white.jpg"
+            ]
         }
     ],
     "gallery": [
