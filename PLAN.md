@@ -465,3 +465,38 @@ main.js v=11 / site-data.js v=6 / works.js v=24 / snapshot.js v=3 / model-viewer
 - [ ] lighter.glb 模型朝向确认
 - [ ] 国内访问速度观察（github.io 时快时慢，备选：Gitee 推镜像 / Cloudflare Pages）
 - [ ] teach 用户「GitHub 网页改 works.json 加作品」流程
+
+---
+
+### 本次改动（会话 8 续：上线后实测修复批次，2026-09-28~29）
+
+> 部署后用户真机实测（iPhone 15 Pro + 电脑）反馈，逐条修复。每条一个独立 commit，**回退时在 git log 里找到对应 hash，`git revert <hash>` 即可单独撤销**。
+
+#### 修复批次与 commit 索引（按时间序）
+| commit | 内容 |
+|--------|------|
+| 11d7929 | 手机端性能大修：≤700px 不加载 3D 模型（原一进首页就拉 68MB 两个 GLB，iPhone 发热主因）、禁用 lightrays/gradientwaves WebGL 背景（CSS 渐变兜底）、导航收拢（隐藏四个锚点链接）、快照切换胶囊防文字竖排、hero 文字给 FAB 让位、作品网格边距收窄、FAB 缩小、隐藏 NEXT 按钮 |
+| 0c49dd0 | 用户五项：导航 logo 圆环 A →「Ahyu」药丸标（三页，点击回主页）、主页 hero 文字聚拢居中（废除 768px 断点的标题/说明分离式布局）、点击烟花从全屏 canvas 改为 DOM 短线（修复手机点击位置错乱）、lightbox 双指缩放防跳（锚点改用未变换容器 + 换指重置拖拽起点）、删除三页 lightbox 提示小字 |
+| 67ad456 / abddb32 / 8f98fd5 | logo 药丸三轮加宽（桌面+手机，内边距逐步放大） |
+| b51e512 | FAB 加号与主题按钮删除投影（双端，保留 1px 顶部玻璃高光） |
+| fb5124d | 快照放大键改「伪全屏」（CSS 类铺满视口）修 iOS Safari 无元素全屏 API 导致的按钮无效；prism.js 手机端禁用（修作品页滚动闪烁）；清理 images/works/.jpg 空文件 |
+| b9dc8bf | 秋水含睛导语定稿「一个Zippo的打火机。」（替代复刻句） |
+| 1d15b3b | 手机端隐藏三个媒体放大按钮 |
+| 26bb4b6 | **桌面端也回退放大功能**：移除图片/视频/3D 三处放大按钮、toggleFullscreen、伪全屏 CSS 与事件机制（用户最终决定双端都不做放大） |
+
+#### 技术要点（回退/复用时注意）
+1. **手机端（≤700px）3D/WebGL 全部停用是性能基线**：scene3d / lightrays / gradientwaves / prism 四个脚本入口都有 `window.innerWidth <= 700 return` 守卫；恢复手机端 3D 前先做 GLB 压缩（gltfpack，23MB→约 3MB）
+2. **点击火花已是 DOM 实现**（.click-burst + spark-fly 关键帧），点击坐标即视觉位置；旧的 #click-spark 画布方案已删（iOS 视口偏移是它的死穴）
+3. **双指缩放锚点数学**：zoomAt 必须用未变换容器的中心（lightbox 而非 lightboxRing），换指时重置 dragStart——回退缩放相关改动时别把这两处一起退了
+4. **伪全屏机制已整体删除**（含 toggleFullscreen / .pseudo-fs CSS / 图标同步）；若要重做放大，从 26bb4b6 的上一个 commit（1d15b3b）可完整找回
+5. **用户会手改 CSS**：手机端 logo 内边距 22/16px 是用户手改后随 b51e512 批次带入的；我方提交前需 git diff 确认没有卷入用户的未提交手改
+
+#### 版本号现状（下次改动从这里 +1）
+main.js v=14 / snapshot.js v=5 / site-data.js v=6 / works.js v=24 / model-viewer.js v=2 / prism.js v=3 / lightrays.js v=2 / gradientwaves.js v=4 / scene3d.js v=20 / fabmenu.js v=7 / style.css v=70
+
+### 待办（下次对话继续）
+- [ ] 电梯之梦 / 搁浅鲸鱼 / 传送门 三个作品的说明文字（desc 留空，等用户给要点）
+- [ ] GLB 压缩（gltfpack，lighter 23MB / aodike-opt 44MB → 约 3-5MB）——做完可评估恢复手机端 3D
+- [ ] 真实 Logo 替换（目前 nav logo 已是 Ahyu 药丸字标，是否需要图形 Logo 待定）
+- [ ] lighter.glb 模型朝向确认
+- [ ] 国内访问速度观察（github.io 时快时慢，备选：Gitee 推镜像 / Cloudflare Pages）
