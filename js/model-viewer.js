@@ -9,7 +9,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.0;
+        renderer.toneMappingExposure = 1.25;
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.domElement.style.width = "100%";
         renderer.domElement.style.height = "100%";
@@ -24,12 +24,12 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
         var envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
         scene.environment = envTex;
 
-        var ambient = new THREE.AmbientLight(0xffffff, 0.5);
+        var ambient = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambient);
-        var key = new THREE.DirectionalLight(0xffffff, 1.4);
+        var key = new THREE.DirectionalLight(0xffffff, 1.7);
         key.position.set(2, 3, 4);
         scene.add(key);
-        var rim = new THREE.DirectionalLight(0xeaf2ff, 1.1);
+        var rim = new THREE.DirectionalLight(0xeaf2ff, 1.3);
         rim.position.set(-3, 2, -5);
         scene.add(rim);
 
@@ -43,7 +43,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
             function (gltf) {
                 if (disposed) return;
                 var model = gltf.scene;
-                var env = opts.envIntensity != null ? opts.envIntensity : 0.5;
+                var env = opts.envIntensity != null ? opts.envIntensity : 0.9;
                 model.traverse(function (o) {
                     if (o.isMesh && o.material && "envMapIntensity" in o.material) {
                         o.material.envMapIntensity = env;
