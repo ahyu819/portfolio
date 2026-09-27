@@ -185,7 +185,7 @@ header {
 .nav-logo {
     width: auto;
     height: 36px;
-    padding: 0 20px 0 16px;
+    padding: 0 26px 0 20px;
     position: relative;
     flex-shrink: 0;
     cursor: pointer;
@@ -1194,7 +1194,7 @@ html[data-theme="light"] .skill-tip::after {
 @media (max-width: 640px) {
     .nav-logo {
         height: 30px;
-        padding: 0 12px 0 8px;
+        padding: 0 16px 0 12px;
     }
 
     header {
