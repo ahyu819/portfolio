@@ -31,6 +31,10 @@
         '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 12a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
     var MUTE_ICON =
         '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16 8l5 6M21 8l-5 6"/></svg>';
+    var FS_ENTER =
+        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+    var FS_EXIT =
+        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
 
     var lightbox = document.getElementById("lightbox");
     var lightboxMedia = document.getElementById("lightbox-media");
@@ -229,6 +233,19 @@
         openImage(img.src);
     });
 
+    function toggleFullscreen(el) {
+        var doc = document;
+        if (doc.fullscreenElement) {
+            doc.exitFullscreen();
+        } else if (el.requestFullscreen) {
+            el.requestFullscreen();
+        } else if (el.webkitRequestFullscreen) {
+            el.webkitRequestFullscreen();
+        }
+    }
+
+    window.toggleFullscreen = toggleFullscreen;
+
     function initVideoPlayer(wrap) {
         var video = wrap.querySelector(".work-video");
         if (!video) return;
@@ -245,8 +262,10 @@
         var fill = wrap.querySelector(".vp-progress-fill");
         var timeEl = wrap.querySelector(".vp-time");
 
+        var fsBtn = wrap.querySelector(".vp-fullscreen");
+
         var INTERACTIVE =
-            ".vp-center-btn,.vp-play-toggle,.vp-volume,.vp-volume-panel,.vp-progress";
+            ".vp-center-btn,.vp-play-toggle,.vp-volume,.vp-volume-panel,.vp-progress,.vp-fullscreen";
         var volumeTimer = null;
 
         function fmt(sec) {
@@ -371,6 +390,16 @@
             if (video.duration) {
                 video.currentTime = pct * video.duration;
             }
+        });
+
+        fsBtn.innerHTML = FS_ENTER;
+        fsBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            toggleFullscreen(wrap);
+        });
+
+        document.addEventListener("fullscreenchange", function () {
+            fsBtn.innerHTML = document.fullscreenElement ? FS_EXIT : FS_ENTER;
         });
 
         document.addEventListener("keydown", function (e) {
