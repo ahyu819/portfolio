@@ -298,12 +298,23 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
         ndc.y = -(e.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(ndc, camera);
         var hits = raycaster.intersectObject(current.group, true);
-        if (hits.length > 0) switchModel();
+        if (hits.length > 0) { switchModel(); resetAutoSwitch(); }
     }, { passive: true });
 
     // 手机端 next 按钮 = 同点击模型切换
     var nextBtn = document.querySelector(".model-next-btn");
-    if (nextBtn) nextBtn.addEventListener("click", function () { switchModel(); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { switchModel(); resetAutoSwitch(); });
+
+    /* ---------------- 定时轮换：每 10 秒自动切到下一个模型 ---------------- */
+    var AUTO_SWITCH_MS = 10000;
+    var autoTimer = null;
+    function startAutoSwitch() {
+        if (autoTimer) clearInterval(autoTimer);
+        autoTimer = setInterval(function () {
+            if (heroVisible && !document.hidden) switchModel();
+        }, AUTO_SWITCH_MS);
+    }
+    startAutoSwitch();
 
     /* ---------------- 滚动 / 缩放 / 渲染 ---------------- */
     var progress = 0;
