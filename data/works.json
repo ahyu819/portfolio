@@ -60,6 +60,18 @@
                 "images/works/gun-2.jpg",
                 "images/works/gun-3.jpg"
             ]
+        },
+        {
+            "title": "水冷散热器",
+            "type": "图片",
+            "img": "images/works/cooler-main.jpg",
+            "addTag": "硬表面",
+            "desc": "完全由 Blender 制作。",
+            "gallery": [
+                "images/works/cooler-2.jpg",
+                "images/works/cooler-3.jpg",
+                "images/works/cooler-4.jpg"
+            ]
         }
     ],
     "gallery": [
