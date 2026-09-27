@@ -1,7 +1,8 @@
 import { Renderer, Triangle, Program, Mesh } from "ogl";
 
 (function () {
-    if (window.innerWidth <= 700) return; /* 手机端禁用 WebGL 背景（滚动闪烁 + GPU 发热），纯色渐变兜底 */
+    /* 手机端恢复背景：dpr 锁 1 + 保留绘制缓冲 + 忽略地址栏伸缩的小幅尺寸变化，避免滚动闪烁 */
+    var isMobile = window.innerWidth <= 700;
     var container = document.createElement("div");
     container.className = "prism-container";
     document.body.appendChild(container);
@@ -17,8 +18,8 @@ import { Renderer, Triangle, Program, Mesh } from "ogl";
     var TS = 0.5;
     var SAT = 1.5;
 
-    var dpr = Math.min(2, window.devicePixelRatio || 1);
-    var renderer = new Renderer({ dpr: dpr, alpha: true, antialias: false });
+    var dpr = Math.min(isMobile ? 1 : 2, window.devicePixelRatio || 1);
+    var renderer = new Renderer({ dpr: dpr, alpha: true, antialias: false, preserveDrawingBuffer: true });
     var gl = renderer.gl;
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.CULL_FACE);
@@ -189,9 +190,15 @@ import { Renderer, Triangle, Program, Mesh } from "ogl";
     });
     var mesh = new Mesh(gl, { geometry, program });
 
+    var lastW = 0;
+    var lastH = 0;
     function resize() {
         var w = container.clientWidth || 1;
         var h = container.clientHeight || 1;
+        /* 手机地址栏伸缩引起的小幅变化直接忽略，防止画布反复重建导致闪烁 */
+        if (lastW && Math.abs(w - lastW) < 80 && Math.abs(h - lastH) < 80) return;
+        lastW = w;
+        lastH = h;
         renderer.setSize(w, h);
         iResBuf[0] = gl.drawingBufferWidth;
         iResBuf[1] = gl.drawingBufferHeight;
