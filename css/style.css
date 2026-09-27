@@ -1876,9 +1876,7 @@ body.snapshot-lock {
     -webkit-backdrop-filter: blur(14px) saturate(160%);
     backdrop-filter: blur(14px) saturate(160%);
     border: 1px solid rgba(255, 255, 255, 0.28);
-    box-shadow:
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-        0 14px 38px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
     color: #fff;
     cursor: pointer;
     transition: background 0.25s, border-color 0.25s;
@@ -2016,9 +2014,7 @@ body.snapshot-lock {
     background: rgba(20, 23, 29, 0.75);
     -webkit-backdrop-filter: blur(14px) saturate(160%);
     backdrop-filter: blur(14px) saturate(160%);
-    box-shadow:
-        inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-        0 14px 38px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
     color: #fff;
     cursor: pointer;
     display: flex;
