@@ -82,6 +82,17 @@
             "gallery": [
                 "images/works/metro-white.jpg"
             ]
+        },
+        {
+            "title": "蔚蓝之海",
+            "type": "图片",
+            "img": "images/works/sea-main.jpg",
+            "addTag": "场景",
+            "desc": "跟着 bilibili 的萧阿雨教程制作，植被素材由 engon 插件提供，鸟群动画由 FlockGenerator 插件驱动，其余由 Blender 完成。",
+            "gallery": [
+                "images/works/sea-shot.jpg",
+                "images/works/sea-white.jpg"
+            ]
         }
     ],
     "gallery": [
