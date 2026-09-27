@@ -27,7 +27,6 @@
         }
         var works = data.works || [];
         if (featuredGrid) {
-            works.forEach(function (w, i) { w._idx = i; });
             renderFeatured(works.filter(function (w) { return w.featured; }));
         }
         if (galleryCols) {
@@ -70,7 +69,7 @@
             info.appendChild(p);
             card.appendChild(info);
             card.addEventListener("click", function () {
-                window.location.href = "works.html#work-" + item._idx;
+                if (window.openWorkSnapshot) window.openWorkSnapshot(item);
             });
             featuredGrid.appendChild(card);
             if (window.observeReveal) window.observeReveal(card);

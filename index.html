@@ -98,6 +98,20 @@
         <p>© 2026 Ahyu · 感谢你来逛逛</p>
     </footer>
 
+    <div id="snapshot" class="snapshot" role="dialog" aria-modal="true">
+        <button class="snapshot-close" type="button" aria-label="关闭">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="snapshot-inner">
+            <div id="snapshot-media" class="snapshot-media"></div>
+            <div class="snapshot-info">
+                <h2 id="snapshot-title"></h2>
+                <p id="snapshot-desc"></p>
+                <div id="snapshot-gallery" class="snapshot-gallery"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="lightbox">
         <div class="lightbox-ring">
             <div class="lightbox-inner" id="lightbox-media"></div>
@@ -106,7 +120,8 @@
     </div>
 
     <script src="js/main.js?v=10"></script>
-    <script src="js/site-data.js?v=3"></script>
+    <script src="js/site-data.js?v=4"></script>
+    <script src="js/snapshot.js?v=1"></script>
     <script type="importmap">
         {
             "imports": {
@@ -119,6 +134,7 @@
     <script type="module" src="js/scene3d.js?v=18"></script>
     <script type="module" src="js/lightrays.js?v=1"></script>
     <script type="module" src="js/gradientwaves.js?v=3"></script>
+    <script type="module" src="js/model-viewer.js?v=2"></script>
     <script src="js/fabmenu.js?v=7"></script>
 </body>
 </html>
