@@ -77,6 +77,7 @@
     lightbox.addEventListener(
         "wheel",
         function (e) {
+            if (isMobileView()) return;
             e.preventDefault();
             zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.1 : 0.9);
         },
@@ -93,6 +94,11 @@
         return e.touches.length;
     }
 
+    /* 手机端 lightbox：图片固定展示，禁用拖动/缩放 */
+    function isMobileView() {
+        return window.innerWidth <= 700;
+    }
+
     function touchDistance(touches) {
         var dx = touches[0].clientX - touches[1].clientX;
         var dy = touches[0].clientY - touches[1].clientY;
@@ -102,6 +108,7 @@
     lightbox.addEventListener(
         "touchstart",
         function (e) {
+            if (isMobileView()) return;
             if (touchCount(e) === 2) {
                 pinching = true;
                 pinchStartDist = touchDistance(e.touches);
@@ -117,6 +124,11 @@
     lightbox.addEventListener(
         "touchmove",
         function (e) {
+            /* 手机端固定不动：仅阻止背景滚动，不做任何拖动/缩放 */
+            if (isMobileView()) {
+                e.preventDefault();
+                return;
+            }
             if (pinching && touchCount(e) === 2) {
                 e.preventDefault();
                 var t0 = e.touches[0];
