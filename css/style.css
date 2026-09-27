@@ -596,6 +596,10 @@ section {
     position: relative;
 }
 
+#featured-grid .work-card {
+    cursor: pointer;
+}
+
 .vp-controls {
     position: absolute;
     inset: 0;

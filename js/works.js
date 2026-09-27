@@ -337,6 +337,9 @@
         document.body.classList.remove("snapshot-lock");
         disposeViewer();
         snapshotMedia.innerHTML = "";
+        if (window.location.hash.indexOf("#work-") === 0) {
+            history.replaceState(null, "", window.location.pathname + window.location.search);
+        }
     }
 
     snapshotClose.addEventListener("click", closeSnapshot);
@@ -400,6 +403,8 @@
             }
             WORKS = data.works || [];
             renderGrid();
+            var m = window.location.hash.match(/^#work-(\d+)$/);
+            if (m && WORKS[+m[1]]) openSnapshot(WORKS[+m[1]]);
         });
     }
 })();

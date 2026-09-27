@@ -27,26 +27,13 @@
         }
         var works = data.works || [];
         if (featuredGrid) {
+            works.forEach(function (w, i) { w._idx = i; });
             renderFeatured(works.filter(function (w) { return w.featured; }));
         }
         if (galleryCols) {
             renderGallery(data.gallery || []);
         }
     });
-
-    var VP_CONTROLS =
-        '<div class="vp-controls">' +
-        '<button class="vp-center-btn" type="button" aria-label="播放或暂停"></button>' +
-        '<div class="vp-bottom">' +
-        '<button class="vp-play-toggle" type="button" aria-label="播放或暂停"></button>' +
-        '<div class="vp-progress"><div class="vp-progress-fill"></div></div>' +
-        '<span class="vp-time">0:00 / 0:00</span>' +
-        '<div class="vp-volume">' +
-        '<button class="vp-volume-btn" type="button" aria-label="音量"></button>' +
-        '<div class="vp-volume-panel"><div class="vp-vol-slider"><div class="vp-vol-fill"></div><div class="vp-vol-handle"></div></div></div>' +
-        "</div>" +
-        '<button class="vp-fullscreen" type="button" aria-label="全屏"></button>' +
-        "</div></div>";
 
     function brief(item) {
         var d = String(item.desc || "").split("\n")[0].trim();
@@ -60,18 +47,17 @@
             card.className = "work-card reveal";
             var media = document.createElement("div");
             media.className = "work-media";
+            var img = document.createElement("img");
+            img.src = item.img;
+            img.alt = item.title;
+            img.loading = "lazy";
+            img.draggable = false;
+            media.appendChild(img);
             if (item.video) {
-                media.setAttribute("data-video", "");
-                media.innerHTML =
-                    '<video class="work-video" preload="metadata" poster="' + item.img + '" src="' + item.video + '"></video>' +
-                    VP_CONTROLS;
-            } else {
-                var img = document.createElement("img");
-                img.src = item.img;
-                img.alt = item.title;
-                img.loading = "lazy";
-                img.draggable = false;
-                media.appendChild(img);
+                var play = document.createElement("span");
+                play.className = "work-play-icon";
+                play.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+                media.appendChild(play);
             }
             card.appendChild(media);
             var info = document.createElement("div");
@@ -83,10 +69,12 @@
             info.appendChild(h3);
             info.appendChild(p);
             card.appendChild(info);
+            card.addEventListener("click", function () {
+                window.location.href = "works.html#work-" + item._idx;
+            });
             featuredGrid.appendChild(card);
             if (window.observeReveal) window.observeReveal(card);
             if (window.bindTilt) window.bindTilt(card);
-            if (item.video && window.initVideoPlayer) window.initVideoPlayer(media);
         });
     }
 
