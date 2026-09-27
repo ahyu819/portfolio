@@ -62,7 +62,8 @@
     }
 
     function zoomAt(px, py, factor) {
-        var rect = lightboxRing.getBoundingClientRect();
+        /* 锚点用未变换的外层容器中心，避免缩放中中心点漂移导致图片乱跳 */
+        var rect = lightbox.getBoundingClientRect();
         var cx = px - rect.left - rect.width / 2;
         var cy = py - rect.top - rect.height / 2;
         var prev = zoom;
@@ -127,7 +128,7 @@
                 pinchStartDist = dist;
                 return;
             }
-            if (touchCount(e) === 1) {
+            if (touchCount(e) === 1 && !pinching) {
                 e.preventDefault();
                 var t = e.touches[0];
                 var dx = t.clientX - dragStartX;
@@ -143,9 +144,18 @@
         { passive: false }
     );
 
-    lightbox.addEventListener("touchend", function () {
-        pinching = false;
-        lightboxRing.classList.remove("dragging");
+    lightbox.addEventListener("touchend", function (e) {
+        if (pinching && e.touches.length === 1) {
+            /* 双指收起一根后，把拖拽起点重置到剩余手指，避免图片跳位 */
+            pinching = false;
+            dragStartX = e.touches[0].clientX;
+            dragStartY = e.touches[0].clientY;
+            lightboxRing.classList.add("dragging");
+        }
+        if (e.touches.length === 0) {
+            pinching = false;
+            lightboxRing.classList.remove("dragging");
+        }
     });
 
     lightbox.addEventListener("pointerdown", function (e) {
@@ -623,77 +633,8 @@
 })();
 
 (function () {
-    var DURATION = 400;
+    /* 点击火花：每次点击生成一组放射短线（DOM 实现，位置即点击位置） */
     var SPARK_COUNT = 8;
-    var SPARK_RADIUS = 15;
-    var SPARK_SIZE = 7;
-
-    var canvas = document.createElement("canvas");
-    canvas.id = "click-spark";
-    document.body.appendChild(canvas);
-    var ctx = canvas.getContext("2d");
-    var dpr = window.devicePixelRatio || 1;
-
-    function resize() {
-        canvas.width = Math.round(window.innerWidth * dpr);
-        canvas.height = Math.round(window.innerHeight * dpr);
-    }
-    window.addEventListener("resize", resize);
-    resize();
-
-    var sparks = [];
-    var running = false;
-
-    function easeOut(t) {
-        return t * (2 - t);
-    }
-
-    function spawn(x, y) {
-        var now = performance.now();
-        var color = document.documentElement.getAttribute("data-theme") === "light" ? "#14181f" : "#ffffff";
-        for (var i = 0; i < SPARK_COUNT; i++) {
-            sparks.push({
-                x: x * dpr,
-                y: y * dpr,
-                angle: (2 * Math.PI * i) / SPARK_COUNT,
-                start: now,
-                color: color
-            });
-        }
-        if (!running) {
-            running = true;
-            requestAnimationFrame(draw);
-        }
-    }
-
-    function draw(now) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        sparks = sparks.filter(function (s) {
-            var elapsed = now - s.start;
-            if (elapsed >= DURATION) return false;
-            var t = easeOut(elapsed / DURATION);
-            var dist = t * SPARK_RADIUS * dpr;
-            var len = SPARK_SIZE * (1 - t) * dpr;
-            var x1 = s.x + dist * Math.cos(s.angle);
-            var y1 = s.y + dist * Math.sin(s.angle);
-            var x2 = s.x + (dist + len) * Math.cos(s.angle);
-            var y2 = s.y + (dist + len) * Math.sin(s.angle);
-            ctx.strokeStyle = s.color;
-            ctx.lineWidth = 2 * dpr;
-            ctx.lineCap = "round";
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-            return true;
-        });
-        if (sparks.length) {
-            requestAnimationFrame(draw);
-        } else {
-            running = false;
-        }
-    }
-
     var downX = null;
     var downY = null;
 
@@ -709,7 +650,19 @@
         downX = null;
         downY = null;
         if (Math.abs(dx) > 6 || Math.abs(dy) > 6) return;
-        spawn(e.clientX, e.clientY);
+        var color = document.documentElement.getAttribute("data-theme") === "light" ? "rgba(20,24,31,0.9)" : "rgba(255,255,255,0.95)";
+        var burst = document.createElement("div");
+        burst.className = "click-burst";
+        burst.style.left = e.clientX + "px";
+        burst.style.top = e.clientY + "px";
+        for (var i = 0; i < SPARK_COUNT; i++) {
+            var line = document.createElement("span");
+            line.style.setProperty("--r", (i * 360) / SPARK_COUNT + "deg");
+            line.style.background = color;
+            burst.appendChild(line);
+        }
+        document.body.appendChild(burst);
+        setTimeout(function () { burst.remove(); }, 420);
     });
 
     document.addEventListener("pointercancel", function () {

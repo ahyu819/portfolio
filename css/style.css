@@ -183,8 +183,9 @@ header {
 }
 
 .nav-logo {
-    width: 36px;
+    width: auto;
     height: 36px;
+    padding: 0 16px 0 10px;
     position: relative;
     flex-shrink: 0;
     cursor: pointer;
@@ -198,7 +199,7 @@ header {
 .nav-logo-ring {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
+    border-radius: 999px;
     background: linear-gradient(135deg, #f5f7fa, #9aa3b2);
     padding: 1.5px;
     transition: background 0.3s;
@@ -211,7 +212,7 @@ header {
 .nav-logo-inner {
     position: absolute;
     inset: 1.5px;
-    border-radius: 50%;
+    border-radius: 999px;
     background: #0f1115;
     display: flex;
     align-items: center;
@@ -219,6 +220,7 @@ header {
     font-family: "Instrument Serif", serif;
     font-style: italic;
     font-size: 15px;
+    letter-spacing: 0.02em;
     color: #e8eaf0;
 }
 
@@ -381,37 +383,22 @@ section {
     }
 }
 
-/* ===== 手机端 hero：标题在上 / 说明在下 / 模型下方 next 按钮 ===== */
+/* ===== 手机端 hero：文字聚拢居中（3D 场景手机端不加载） ===== */
 .model-next-btn {
     display: none;
 }
 
 @media (max-width: 768px) {
     .hero-inner {
-        display: contents;
+        padding: 0 24px;
     }
 
     .hero-inner h1 {
-        position: absolute;
-        top: 20vh;
-        left: 7vw;
-        text-align: left;
+        font-size: 34px;
     }
 
     .hero-inner .hero-role {
-        position: absolute;
-        top: 78vh;
-        left: 20px;
-        right: 20px;
-        text-align: center;
-    }
-
-    .hero-inner .hero-desc {
-        position: absolute;
-        top: 83.5vh;
-        left: 20px;
-        right: 20px;
-        text-align: center;
+        font-size: 17px;
     }
 
     .model-next-btn {
@@ -1206,8 +1193,8 @@ html[data-theme="light"] .skill-tip::after {
 
 @media (max-width: 640px) {
     .nav-logo {
-        width: 30px;
         height: 30px;
+        padding: 0 12px 0 8px;
     }
 
     header {
@@ -1364,11 +1351,30 @@ html[data-theme="light"] .skill-tip::after {
     margin-top: 16px;
 }
 
-#click-spark {
+.click-burst {
     position: fixed;
-    inset: 0;
-    pointer-events: none;
     z-index: 9999;
+    pointer-events: none;
+}
+
+.click-burst span {
+    position: absolute;
+    left: -1px;
+    top: -18px;
+    width: 2px;
+    height: 18px;
+    border-radius: 2px;
+    transform-origin: 50% 100%;
+    transform: rotate(var(--r)) translateY(-6px) scaleY(0.6);
+    opacity: 0.95;
+    animation: spark-fly 0.4s ease-out forwards;
+}
+
+@keyframes spark-fly {
+    to {
+        opacity: 0;
+        transform: rotate(var(--r)) translateY(-20px) scaleY(1.15);
+    }
 }
 
 /* ===== 全部作品页：底部导航 + 网格 + 快照 ===== */
