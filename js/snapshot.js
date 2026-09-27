@@ -52,7 +52,7 @@
             rest = esc.slice(ci + 1).replace(/^\s+/, "");
         } else {
             var pi = esc.indexOf("。");
-            if (pi > -1 && pi <= 30 && pi < esc.length - 1) {
+            if (pi > -1 && pi <= 40 && pi < esc.length - 1) {
                 lead = esc.slice(0, pi + 1);
                 rest = esc.slice(pi + 1).replace(/^\s+/, "");
             }
