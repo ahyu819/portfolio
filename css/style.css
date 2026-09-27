@@ -2640,7 +2640,7 @@ button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== 快照页：贴图拆解卡组（扑克牌展开） ===== */
+/* ===== 快照页：贴图拆解（手风琴画廊） ===== */
 .snapshot-textures {
     margin-top: 36px;
 }
@@ -2666,84 +2666,64 @@ button, a, [role="button"] {
     opacity: 0.75;
 }
 
-.tex-fan {
-    --tex-w: clamp(150px, 17vw, 200px);
-    position: relative;
-    height: calc(var(--tex-w) + 56px);
-    margin-top: 10px;
+.tex-acc {
+    display: flex;
+    gap: 10px;
+    height: clamp(240px, 38vw, 380px);
+    margin-top: 16px;
 }
 
-.tex-card {
-    --off: calc(var(--i) - (var(--n) - 1) / 2);
-    position: absolute;
-    left: 50%;
-    top: 28px;
-    width: var(--tex-w);
-    aspect-ratio: 1 / 1;
-    margin-left: calc(var(--tex-w) / -2);
-    transform-origin: 50% 135%;
-    transform: rotate(calc(var(--off) * 9deg));
+.tex-panel {
+    position: relative;
+    flex: 1 1 0%;
+    min-width: 0;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 14px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.14);
     background: #0c0e12;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
-    cursor: zoom-in;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s;
+    cursor: pointer;
+    transition: flex-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s;
 }
 
-/* 展开态：触屏由 JS 加 .spread，桌面由下方 hover 触发 */
-.tex-fan.spread .tex-card {
-    transform: translateX(calc(var(--off) * var(--tex-w) * 0.62)) rotate(calc(var(--off) * 2.5deg));
+.tex-panel.active {
+    flex-grow: 3.25;
+    border-color: rgba(255, 255, 255, 0.32);
 }
 
-@media (hover: hover) {
-    .tex-fan:hover .tex-card {
-        transform: translateX(calc(var(--off) * var(--tex-w) * 0.62)) rotate(calc(var(--off) * 2.5deg));
-    }
-
-    .tex-fan .tex-card:hover {
-        transform: translateY(-12px) scale(1.05);
-        border-color: rgba(255, 255, 255, 0.45);
-        z-index: 10;
-    }
-}
-
-.tex-card img {
+.tex-panel img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: grayscale(1);
+    transition: filter 0.45s ease;
+}
+
+.tex-panel.active img {
+    filter: none;
 }
 
 .tex-name {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 20px 10px 8px;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    left: 14px;
+    bottom: 12px;
+    padding: 4px 12px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
     color: #eef1f6;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.74));
+    border-left: 3px solid var(--accent);
+    background: rgba(10, 12, 16, 0.55);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: 0 8px 8px 0;
     opacity: 0;
-    transition: opacity 0.3s;
+    transform: translateX(-8px);
+    transition: opacity 0.35s, transform 0.35s;
+    white-space: nowrap;
 }
 
-.tex-fan.spread .tex-name,
-.tex-fan .tex-card:hover .tex-name {
+.tex-panel.active .tex-name {
     opacity: 1;
-}
-
-@media (hover: hover) {
-    .tex-fan:hover .tex-name {
-        opacity: 1;
-    }
-}
-
-@media (max-width: 700px) {
-    .tex-fan {
-        --tex-w: clamp(96px, 24vw, 140px);
-    }
+    transform: translateX(0);
 }

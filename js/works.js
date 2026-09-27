@@ -159,48 +159,49 @@
         return tabs;
     }
 
-    /* 贴图拆解：扑克牌式展开卡组 */
+    /* 贴图拆解：手风琴画廊（参考 reactbits AccordionGallery） */
     function buildTextures(w) {
         var sec = document.createElement("div");
         sec.className = "snapshot-textures";
-        var isHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
         var label = document.createElement("div");
         label.className = "tex-label";
         label.innerHTML =
             '<span class="tex-eyebrow">Textures · 贴图拆解</span>' +
-            '<span class="tex-hint">' + (isHover ? "悬停展开 · 点击放大" : "点一下展开 · 再点放大") + "</span>";
-        var fan = document.createElement("div");
-        fan.className = "tex-fan";
-        var n = w.textures.length;
+            '<span class="tex-hint">点击切换 · 再点一次放大</span>';
+        var acc = document.createElement("div");
+        acc.className = "tex-acc";
+        var active = null;
+        function setActive(p) {
+            if (active) active.classList.remove("active");
+            active = p;
+            p.classList.add("active");
+        }
         w.textures.forEach(function (t, i) {
-            var card = document.createElement("figure");
-            card.className = "tex-card";
-            card.style.setProperty("--i", i);
-            card.style.setProperty("--n", n);
+            var panel = document.createElement("button");
+            panel.type = "button";
+            panel.className = "tex-panel" + (i === 1 ? " active" : "");
+            if (i === 1) active = panel;
             var img = document.createElement("img");
             img.src = t.img;
             img.alt = t.name || "贴图";
             img.draggable = false;
             img.loading = "lazy";
-            var cap = document.createElement("figcaption");
+            var cap = document.createElement("span");
             cap.className = "tex-name";
             cap.textContent = t.name || "";
-            card.appendChild(img);
-            card.appendChild(cap);
-            card.addEventListener("click", function () {
-                if (!isHover && !fan.classList.contains("spread")) {
-                    fan.classList.add("spread");
-                    return;
+            panel.appendChild(img);
+            panel.appendChild(cap);
+            panel.addEventListener("click", function () {
+                if (panel === active) {
+                    if (window.openImage) window.openImage(t.img);
+                } else {
+                    setActive(panel);
                 }
-                if (window.openImage) window.openImage(t.img);
             });
-            fan.appendChild(card);
-        });
-        fan.addEventListener("click", function (e) {
-            if (e.target === fan) fan.classList.toggle("spread");
+            acc.appendChild(panel);
         });
         sec.appendChild(label);
-        sec.appendChild(fan);
+        sec.appendChild(acc);
         return sec;
     }
 
