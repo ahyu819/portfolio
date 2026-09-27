@@ -57,10 +57,6 @@
                 "</div>" +
                 '<figcaption class="work-caption">' +
                 "<h3>" + item.title + "</h3>" +
-                '<span class="work-badges">' +
-                (item.addTag ? badge(item.addTag) : "") +
-                badge(categoryTag(item)) +
-                "</span>" +
                 "</figcaption>";
             card.addEventListener("click", function () {
                 openSnapshot(item);
@@ -75,9 +71,7 @@
     var snapshotInner = snapshot.querySelector(".snapshot-inner");
     var snapshotMedia = document.getElementById("snapshot-media");
     var snapshotTitle = document.getElementById("snapshot-title");
-    var snapshotType = document.getElementById("snapshot-type");
     var snapshotDesc = document.getElementById("snapshot-desc");
-    var snapshotTags = document.getElementById("snapshot-tags");
     var snapshotGallery = document.getElementById("snapshot-gallery");
     var snapshotClose = snapshot.querySelector(".snapshot-close");
 
@@ -166,8 +160,7 @@
         var label = document.createElement("div");
         label.className = "tex-label";
         label.innerHTML =
-            '<span class="tex-eyebrow">Textures · 贴图拆解</span>' +
-            '<span class="tex-hint">点击切换 · 再点一次放大</span>';
+            '<span class="tex-eyebrow">Textures · 贴图拆解</span>';
         var acc = document.createElement("div");
         acc.className = "tex-acc";
         var active = null;
@@ -285,13 +278,7 @@
 
         snapshotMedia.appendChild(stack);
         snapshotTitle.textContent = w.title;
-        snapshotType.textContent = w.type;
         snapshotDesc.textContent = w.desc;
-        snapshotTags.innerHTML = "";
-        var snapBadges = [];
-        if (w.addTag) snapBadges.push(badge(w.addTag));
-        snapBadges.push(badge(categoryTag(w)));
-        snapshotTags.innerHTML = snapBadges.join("");
         var prevTex = snapshotGallery.parentElement.querySelector(".snapshot-textures");
         if (prevTex) prevTex.remove();
         if (w.textures && w.textures.length) {
