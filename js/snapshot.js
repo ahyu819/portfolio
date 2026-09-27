@@ -13,6 +13,7 @@
     var FS_EXIT =
         '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
     var fsIconBtn = null;
+    var modelFsBtn = null;
     var modelApi = null;
     var currentVideo = null;
 
@@ -22,11 +23,16 @@
             modelApi = null;
         }
         currentVideo = null;
+        modelFsBtn = null;
     }
 
     document.addEventListener("fullscreenchange", function () {
+        var fs = !!document.fullscreenElement;
         if (fsIconBtn) {
-            fsIconBtn.innerHTML = document.fullscreenElement ? FS_EXIT : FS_ENTER;
+            fsIconBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
+        }
+        if (modelFsBtn) {
+            modelFsBtn.innerHTML = fs ? FS_EXIT : FS_ENTER;
         }
     });
 
@@ -238,6 +244,16 @@
             tip.className = "model-loading";
             tip.textContent = "模型加载中 0%";
             modelNode.appendChild(tip);
+            var modelFs = document.createElement("button");
+            modelFs.type = "button";
+            modelFs.className = "vp-fullscreen snapshot-fs";
+            modelFs.setAttribute("aria-label", "全屏");
+            modelFs.innerHTML = FS_ENTER;
+            modelFs.addEventListener("click", function () {
+                if (window.toggleFullscreen) window.toggleFullscreen(modelNode);
+            });
+            modelNode.appendChild(modelFs);
+            modelFsBtn = modelFs;
             stage.appendChild(modelNode);
             forms.push({ name: "model", label: "3D 模型", node: modelNode });
             stack.appendChild(buildTabs(w, forms, modelNode, defaultName));
