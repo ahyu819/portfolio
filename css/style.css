@@ -2680,12 +2680,6 @@ button, a, [role="button"] {
         font-size: 12px;
     }
 
-    /* hero 文字给右下角 FAB 让位 */
-    .page-hero,
-    #hero .hero-inner {
-        padding-right: 76px;
-    }
-
     /* 手机隐藏 NEXT 按钮（3D 场景在手机端不加载） */
     .model-next-btn {
         display: none;
