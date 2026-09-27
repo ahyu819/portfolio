@@ -12,7 +12,8 @@
             "addTag": "题材标签：硬表面 / 人物 / 场景（对应作品页筛选按钮）",
             "desc": "作品详细说明，点开快照页时显示；首页卡片取第一行当简介",
             "model": "（可选）3D 模型文件路径（models/xxx.glb），填了快照页就出现「3D 模型」切换按钮",
-            "gallery": "快照页里的图集列表，不需要就删掉"
+            "gallery": "快照页里的图集列表，不需要就删掉",
+            "textures": "（可选）贴图拆解卡组：数组，每项 { \"img\": 图片路径, \"name\": 名称 }，快照页说明下方会出现扑克牌展开式的贴图展示，不需要就删掉"
         },
         "homepage_gallery": "下面 gallery 数组 = 首页「作品图集」瀑布流的图片"
     },
@@ -25,6 +26,12 @@
             "featured": true,
             "model": "models/lighter.glb",
             "addTag": "硬表面",
+            "textures": [
+                { "img": "images/works/tex-basecolor.jpg", "name": "Basecolor" },
+                { "img": "images/works/tex-metallic.jpg", "name": "Metallic" },
+                { "img": "images/works/tex-normal.jpg", "name": "Normal" },
+                { "img": "images/works/tex-roughness.jpg", "name": "Roughness" }
+            ],
             "desc": "这件作品的视频和说明还没放进来，先占个位。素材整理好后，把标题、封面、视频和这段文字都换成真实的就行。",
             "gallery": [
                 "images/works/work1.jpg"
