@@ -1689,7 +1689,7 @@ html[data-theme="light"] .skill-tip::after {
 
 .snapshot-info p {
     color: #aab2c0;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.85;
     max-width: 640px;
     margin: 14px auto 0;
@@ -1702,6 +1702,17 @@ html[data-theme="light"] .skill-tip::after {
 
 .snapshot-info .detail-tags {
     justify-content: center;
+}
+
+.snapshot-info p .desc-lead {
+    display: block;
+    font-weight: 600;
+    color: #eef1f6;
+    margin-bottom: 2px;
+}
+
+.snapshot-info p .desc-sw {
+    color: #d9b96c;
 }
 
 .snapshot-info .work-badge {

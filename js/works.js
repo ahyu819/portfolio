@@ -97,6 +97,28 @@
         }
     });
 
+    /* 说明文字渲染：冒号前导语单独成行，软件名高亮 */
+    var SOFTWARE_NAMES = ["Blender", "Photoshop", "Substance Painter", "ZBrush", "Illustrator", "After Effects"];
+
+    function renderDesc(el, text) {
+        var esc = String(text || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        SOFTWARE_NAMES.forEach(function (name) {
+            esc = esc.replace(new RegExp("\\b" + name + "\\b", "gi"), function (m) {
+                return '<span class="desc-sw">' + m + "</span>";
+            });
+        });
+        var idx = esc.indexOf("：");
+        if (idx > -1 && idx <= 12) {
+            el.innerHTML =
+                '<span class="desc-lead">' + esc.slice(0, idx) + "</span>" + esc.slice(idx + 1);
+        } else {
+            el.innerHTML = esc;
+        }
+    }
+
     function buildTabs(w, forms, modelNode, defaultName) {
         var tabs = document.createElement("div");
         tabs.className = "snapshot-tabs";
@@ -278,7 +300,7 @@
 
         snapshotMedia.appendChild(stack);
         snapshotTitle.textContent = w.title;
-        snapshotDesc.textContent = w.desc;
+        renderDesc(snapshotDesc, w.desc);
         var prevTex = snapshotGallery.parentElement.querySelector(".snapshot-textures");
         if (prevTex) prevTex.remove();
         if (w.textures && w.textures.length) {
