@@ -1813,6 +1813,7 @@ body.snapshot-lock {
     position: absolute;
     right: 14px;
     bottom: 14px;
+    z-index: 7;
     width: 42px;
     height: 42px;
     border-radius: 10px;
