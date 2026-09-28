@@ -24,22 +24,12 @@
             '<svg class="fab-menu-arrow" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'
     };
 
-    var LIKE_KEY = "ajan_site_likes";
     var THEME_KEY = "ajan_theme";
 
-    function likeCount() {
-        try {
-            return parseInt(localStorage.getItem(LIKE_KEY) || "0", 10) || 0;
-        } catch (e) {
-            return 0;
-        }
-    }
-
-    function saveLikes(n) {
-        try {
-            localStorage.setItem(LIKE_KEY, String(n));
-        } catch (e) {}
-    }
+    /* 留言与点赞云端存储（Supabase） */
+    var SUPABASE_URL = "https://ybhornjttxiirbohbdtl.supabase.co";
+    var SUPABASE_KEY = "sb_publishable_iF5HocPTx5Vex4ZNsvWw0w_Cw3eaL_B";
+    var likeCount = 0;
 
     var wrap = document.createElement("div");
     wrap.className = "fab-wrap";
@@ -83,7 +73,7 @@
         '<div class="fab-foot">' +
         '<div class="fab-foot-links">' +
         '<button class="fab-mini" type="button" data-act="like" aria-label="点赞">' + ICONS.heart +
-        "<span>点赞</span><span class=\"fab-like-count\">" + likeCount() + "</span>" +
+        "<span>点赞</span><span class=\"fab-like-count\">" + likeCount + "</span>" +
         '<span class="fab-tooltip">喜欢就点个赞</span></button>' +
         '<button class="fab-mini" type="button" data-act="contact" aria-label="联系方式">' + ICONS.mail + "<span>联系</span>" +
         '<div class="fab-contact-pop" id="fab-contact-pop"></div>' +
@@ -256,26 +246,10 @@
         }
     });
 
-    var MSG_KEY = "ajan_msgs";
     var msgInput = wrap.querySelector("#fab-msg-input");
     var msgNick = wrap.querySelector("#fab-msg-nick");
     var msgSend = wrap.querySelector("#fab-msg-send");
     var msgList = wrap.querySelector("#fab-msg-list");
-
-    function loadMsgs() {
-        try {
-            var arr = JSON.parse(localStorage.getItem(MSG_KEY) || "[]");
-            return Array.isArray(arr) ? arr : [];
-        } catch (e) {
-            return [];
-        }
-    }
-
-    function saveMsgs(list) {
-        try {
-            localStorage.setItem(MSG_KEY, JSON.stringify(list));
-        } catch (e) {}
-    }
 
     function escapeHtml(s) {
         return String(s).replace(/[&<>"']/g, function (c) {
@@ -287,17 +261,33 @@
         return n < 10 ? "0" + n : String(n);
     }
 
-    function nowStr() {
-        var d = new Date();
+    function fmtTime(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return "";
         return (
             d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) +
             " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes())
         );
     }
 
-    function renderMsgs() {
-        var list = loadMsgs();
-        if (!list.length) {
+    function sbHeaders() {
+        return {
+            apikey: SUPABASE_KEY,
+            Authorization: "Bearer " + SUPABASE_KEY,
+            "Content-Type": "application/json"
+        };
+    }
+
+    function renderMsgs(list, state) {
+        if (state === "loading") {
+            msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">留言加载中…</li>';
+            return;
+        }
+        if (state === "error") {
+            msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">留言服务暂时不可用，请稍后再试～</li>';
+            return;
+        }
+        if (!list || !list.length) {
             msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">还没有留言，来抢沙发～</li>';
             return;
         }
@@ -306,33 +296,74 @@
                 return (
                     '<li class="fab-msg-item">' +
                     '<div class="fab-msg-nickname">' +
-                    escapeHtml(m.nick ? m.nick : "匿名") +
+                    escapeHtml(m.nickname ? m.nickname : "匿名") +
                     "</div>" +
                     '<div class="fab-msg-text">' +
-                    escapeHtml(m.text) +
+                    escapeHtml(m.content) +
                     '</div><span class="fab-msg-time">' +
-                    escapeHtml(m.time) +
+                    escapeHtml(fmtTime(m.created_at)) +
                     "</span></li>"
                 );
             })
             .join("");
+        if (msgPanel.classList.contains("open")) {
+            msgPanel.style.maxHeight = msgPanel.scrollHeight + "px";
+        }
+    }
+
+    function fetchMsgs() {
+        renderMsgs(null, "loading");
+        fetch(SUPABASE_URL + "/rest/v1/messages?select=nickname,content,created_at&order=created_at.desc&limit=50", {
+            headers: sbHeaders()
+        })
+            .then(function (r) {
+                if (!r.ok) throw new Error(r.status);
+                return r.json();
+            })
+            .then(function (list) {
+                renderMsgs(list);
+            })
+            .catch(function () {
+                renderMsgs(null, "error");
+            });
     }
 
     msgSend.addEventListener("click", function () {
         var v = msgInput.value.trim();
         if (!v) return;
-        var nick = msgNick.value.trim();
-        var list = loadMsgs();
-        list.unshift({ nick: nick, text: v, time: nowStr() });
-        saveMsgs(list);
-        msgInput.value = "";
-        renderMsgs();
-        if (msgPanel.classList.contains("open")) {
-            msgPanel.style.maxHeight = msgPanel.scrollHeight + "px";
+        if (v.length > 500) {
+            showToast("留言最长 500 字", msgSend);
+            return;
         }
+        var nick = msgNick.value.trim().slice(0, 30);
+        msgSend.disabled = true;
+        msgSend.textContent = "发送中…";
+        fetch(SUPABASE_URL + "/rest/v1/messages", {
+            method: "POST",
+            headers: sbHeaders(),
+            body: JSON.stringify({ nickname: nick, content: v })
+        })
+            .then(function (r) {
+                if (!r.ok) throw new Error(r.status);
+                return r.json();
+            })
+            .then(function () {
+                msgInput.value = "";
+                fetchMsgs();
+            })
+            .catch(function () {
+                showToast("留言服务暂时不可用，稍后再试", msgSend);
+            })
+            .then(function () {
+                msgSend.disabled = false;
+                msgSend.textContent = "发送";
+                if (msgPanel.classList.contains("open")) {
+                    msgPanel.style.maxHeight = msgPanel.scrollHeight + "px";
+                }
+            });
     });
 
-    renderMsgs();
+    fetchMsgs();
 
     // 方向性滑入遮罩（resonance 风格）：按鼠标进入方向滑入，按离开方向收回
     var fabMenu = wrap.querySelector(".fab-menu");
@@ -360,21 +391,36 @@
         });
     });
 
-    renderMsgs();
-
     wrap.addEventListener("click", function (e) {
         if (e.target.closest("#fab-contact-pop")) return;
         var btn = e.target.closest(".fab-mini");
         if (!btn) return;
         var act = btn.getAttribute("data-act");
         if (act === "like") {
-            var n = likeCount() + 1;
-            saveLikes(n);
+            likeCount += 1;
             var cnt = btn.querySelector(".fab-like-count");
-            if (cnt) cnt.textContent = n;
+            if (cnt) cnt.textContent = likeCount;
             btn.style.animation = "none";
             btn.offsetHeight;
             btn.style.animation = "fab-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            fetch(SUPABASE_URL + "/rest/v1/rpc/increment_likes", {
+                method: "POST",
+                headers: sbHeaders()
+            })
+                .then(function (r) {
+                    if (!r.ok) throw new Error(r.status);
+                    return r.json();
+                })
+                .then(function (n) {
+                    if (n != null) {
+                        likeCount = Number(n);
+                        var c = btn.querySelector(".fab-like-count");
+                        if (c) c.textContent = likeCount;
+                    }
+                })
+                .catch(function () {
+                    showToast("点赞服务暂时不可用", btn);
+                });
         } else if (act === "contact") {
             var isOpen = contactPop.classList.contains("open");
             contactPop.classList.toggle("open", !isOpen);
