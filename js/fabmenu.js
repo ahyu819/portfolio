@@ -278,16 +278,15 @@
         };
     }
 
-    function renderMsgs(list, state) {
-        if (state === "loading") {
-            msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">留言加载中…</li>';
-            return;
-        }
-        if (state === "error") {
-            msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">留言服务暂时不可用，请稍后再试～</li>';
-            return;
-        }
-        if (!list || !list.length) {
+    var lastServerMsgs = [];
+
+    function allMsgs(serverList) {
+        return loadOutbox().concat(serverList || lastServerMsgs);
+    }
+
+    function renderMsgs(serverList) {
+        var list = allMsgs(serverList);
+        if (!list.length) {
             msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">还没有留言，来抢沙发～</li>';
             return;
         }
@@ -312,7 +311,7 @@
     }
 
     function fetchMsgs() {
-        renderMsgs(null, "loading");
+        msgList.innerHTML = '<li class="fab-msg-item fab-msg-empty">留言加载中…</li>';
         fetch(SUPABASE_URL + "/rest/v1/messages?select=nickname,content,created_at&order=created_at.desc&limit=50", {
             headers: sbHeaders()
         })
@@ -321,11 +320,81 @@
                 return r.json();
             })
             .then(function (list) {
+                lastServerMsgs = list;
                 renderMsgs(list);
             })
             .catch(function () {
-                renderMsgs(null, "error");
+                /* 断网时显示缓存列表与待发送留言 */
+                renderMsgs();
             });
+    }
+
+    /* 待发送队列：点击即上屏，上传在后台完成，失败自动重试 */
+    var MSG_OUTBOX_KEY = "ajan_msg_outbox";
+
+    function loadOutbox() {
+        try {
+            var arr = JSON.parse(localStorage.getItem(MSG_OUTBOX_KEY) || "[]");
+            return Array.isArray(arr) ? arr : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveOutbox(list) {
+        try {
+            localStorage.setItem(MSG_OUTBOX_KEY, JSON.stringify(list));
+        } catch (e) {}
+    }
+
+    var flushing = false;
+
+    function flushOutbox() {
+        if (flushing) return;
+        var box = loadOutbox();
+        if (!box.length) return;
+        flushing = true;
+        var item = box[0];
+        fetch(SUPABASE_URL + "/rest/v1/messages", {
+            method: "POST",
+            headers: sbHeaders(),
+            body: JSON.stringify({ nickname: item.nickname, content: item.content, created_at: item.created_at })
+        })
+            .then(function (r) {
+                if (!r.ok) throw new Error(r.status);
+                return r.json();
+            })
+            .then(function () {
+                var rest = loadOutbox();
+                rest.shift();
+                saveOutbox(rest);
+                lastServerMsgs.unshift({ nickname: item.nickname, content: item.content, created_at: item.created_at });
+                flushing = false;
+                renderMsgs(lastServerMsgs);
+                flushOutbox();
+            })
+            .catch(function () {
+                flushing = false;
+                item._tries = (item._tries || 0) + 1;
+                var box = loadOutbox();
+                if (box.length && box[0].content === item.content) {
+                    box[0]._tries = item._tries;
+                    saveOutbox(box);
+                }
+                if (item._tries <= 3) {
+                    setTimeout(flushOutbox, item._tries * 8000);
+                } else {
+                    showToast("网络不稳，留言已暂存本机，稍后自动发送", msgSend);
+                }
+            });
+    }
+
+    function enqueueMessage(nick, content) {
+        var box = loadOutbox();
+        box.push({ nickname: nick, content: content, created_at: new Date().toISOString(), _tries: 0 });
+        saveOutbox(box);
+        renderMsgs(lastServerMsgs);
+        flushOutbox();
     }
 
     msgSend.addEventListener("click", function () {
@@ -336,34 +405,11 @@
             return;
         }
         var nick = msgNick.value.trim().slice(0, 30);
-        msgSend.disabled = true;
-        msgSend.textContent = "发送中…";
-        fetch(SUPABASE_URL + "/rest/v1/messages", {
-            method: "POST",
-            headers: sbHeaders(),
-            body: JSON.stringify({ nickname: nick, content: v })
-        })
-            .then(function (r) {
-                if (!r.ok) throw new Error(r.status);
-                return r.json();
-            })
-            .then(function () {
-                msgInput.value = "";
-                fetchMsgs();
-            })
-            .catch(function () {
-                showToast("留言服务暂时不可用，稍后再试", msgSend);
-            })
-            .then(function () {
-                msgSend.disabled = false;
-                msgSend.textContent = "发送";
-                if (msgPanel.classList.contains("open")) {
-                    msgPanel.style.maxHeight = msgPanel.scrollHeight + "px";
-                }
-            });
+        msgInput.value = "";
+        enqueueMessage(nick, v);
     });
 
-    fetchMsgs();
+    flushOutbox();
 
     // 方向性滑入遮罩（resonance 风格）：按鼠标进入方向滑入，按离开方向收回
     var fabMenu = wrap.querySelector(".fab-menu");
