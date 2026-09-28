@@ -498,7 +498,7 @@ main.js v=14 / snapshot.js v=5 / site-data.js v=6 / works.js v=24 / model-viewer
 
 1. **背景**：原留言板/点赞存 localStorage，只有访客自己可见；用户要求数据真正保存、全网可见。首选 LeanCloud 国际版已停止新用户注册；Supabase 免费版（GitHub 账号登录、新加坡节点、无需备案）通过真机验证可用
 2. **云端配置**（用户在 Supabase 控制台完成）：项目 ahyu-portfolio → 跑 `docs/supabase_setup.sql` 建 `messages` 表（全网可读、可发 1~500 字、禁止匿名删改）+ `likes` 单行计数表 + `increment_likes` 安全函数（访客只能加一）
-3. **前端改造**（fabmenu.js v=9）：留言读/写与点赞自增全部走 Supabase REST（fetch，无需 SDK）；发布键带「发送中」态与 500 字上限校验；列表带加载/错误态；昵称最长 30 字；昵称仍为每次刷新重置
+3. **前端改造**（fabmenu.js v=9）：留言读/写与点赞自增全部走 Supabase REST（fetch，无需 SDK）；发布键带「发送中」态与 500 字上限校验；列表带加载/错误态；昵称最长 30 字；昵称仍为每次刷新重置。**v=10 追加**：发送改乐观上屏（点击立即显示）+ 后台队列重试（localStorage 暂存，失败重试 3 次后静默等待下次补发），不再弹"服务不可用"报错
 4. **实测**：iPhone 真机发 5 条留言 + 点赞 10 次，全部落库且可从外部接口读回——**多设备共享同一份数据的目标达成**
 5. **已知限制**：免费项目一周无访问会休眠（需去控制台点 Restore，数据不丢）；垃圾留言去 Supabase 控制台 Table Editor 手动删；**Secret key 绝不能外发**（用户曾误发，已要求删除），前端只有 publishable key + RLS 兜底
 6. 版本号：fabmenu.js v=9；配置常量在 fabmenu.js 顶部（SUPABASE_URL / SUPABASE_KEY）
